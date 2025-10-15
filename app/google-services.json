@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "772385769361",
+    "project_id": "smartqueue-dcb62",
+    "storage_bucket": "smartqueue-dcb62.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:772385769361:android:5a08e65432eac466ba3c30",
+        "android_client_info": {
+          "package_name": "com.example.smartqueue"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCR4V6zA6GY4s1zZnvSN7Sp-c-enQSrPIg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
