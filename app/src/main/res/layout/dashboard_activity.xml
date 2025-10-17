@@ -8,6 +8,18 @@
     android:background="#FCF9EA"
     tools:context=".DashboardActivity">
 
+    <!-- Home Title -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/home_title"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="#333333"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp" />
+
     <!-- Announcement Section -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
