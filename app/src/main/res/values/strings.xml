@@ -1,3 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SmartQueue</string>
+    <!-- APP NAME -->
+    <string name="app_name">Smart Queue</string>
+
+    <!-- Welcome Page -->
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+
+    <!-- Register -->
+    <string name="full_name">Full name</string>
+    <string name="student_email">Student email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="next">Next</string>
+
+    <!-- Step 2 Verification -->
+    <string name="email_verification">Email Verification</string>
+    <string name="verification_instruction">A 6-digit code will be sent to your email.</string>
+    <string name="send_verification_code">Send Verification Code</string>
+    <string name="enter_verification_code">Enter verification code</string>
+    <string name="verify_continue">Verify &amp; Continue</string>
+
+    <!-- Registration Successful -->
+    <string name="success_icon_desc">Success checkmark</string>
+    <string name="registration_successful">Registration Successful!</string>
+    <string name="continue_to_app">Continue to App</string>
+
+    <!-- Dashboard -->
+    <string name="welcome_dashboard">Welcome to Dashboard!</string>
+
+    <!-- Login -->
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="sign_up_prompt">Don\'t have an account? Sign up</string>
 </resources>
