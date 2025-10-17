@@ -28,4 +28,9 @@
 
     <!-- Dashboard -->
     <string name="welcome_dashboard">Welcome to Dashboard!</string>
+
+    <!-- Login -->
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="sign_up_prompt">Don\'t have an account? Sign up</string>
 </resources>
