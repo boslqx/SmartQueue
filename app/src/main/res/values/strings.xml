@@ -48,4 +48,15 @@
     <string name="activity_title">Activity Title</string>
     <string name="time_info">Time info</string>
 
+    <!-- Book Activity -->
+    <string name="select_service">Select Service / Location</string>
+    <string name="discussion_room">Discussion Room</string>
+    <string name="pool_table">Pool Table</string>
+    <string name="ping_pong">Ping Pong</string>
+    <string name="court">Court</string>
+    <string name="multipurpose_court">Multipurpose Court</string>
+    <string name="music_room">Music Room</string>
+    <string name="consultation">Consultation</string>
+    <string name="lecturer_consultation">Lecturer Consultation</string>
+
 </resources>
