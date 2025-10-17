@@ -27,7 +27,16 @@
     <string name="continue_to_app">Continue to App</string>
 
     <!-- Dashboard -->
-    <string name="welcome_dashboard">Welcome to Dashboard!</string>
+    <string name="announcements">Announcements</string>
+    <string name="no_updates">Currently no new updates.</string>
+    <string name="quick_book">Quick Book</string>
+    <string name="my_queues">My Queues</string>
+    <string name="recent_activity">Recent Activity</string>
+    <string name="quick_book_icon">Quick book icon</string>
+    <string name="my_queues_icon">My queues icon</string>
+    <string name="home">Home</string>
+    <string name="book">Book</string>
+    <string name="settings">Settings</string>
 
     <!-- Login -->
     <string name="welcome_back">Welcome Back!</string>
