@@ -49,15 +49,29 @@
                     android:clickable="true"
                     android:focusable="true">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:orientation="vertical"
                         android:gravity="center"
-                        android:text="@string/discussion_room"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:drawableTop="@drawable/ic_room"
-                        android:padding="16dp" />
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@drawable/ic_discussion"
+                            android:contentDescription="@string/discussion_room"
+                            android:scaleType="centerInside" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/discussion_room"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:layout_marginTop="8dp" />
+                    </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
                 <!-- Pool Table -->
@@ -72,15 +86,29 @@
                     android:clickable="true"
                     android:focusable="true">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:orientation="vertical"
                         android:gravity="center"
-                        android:text="@string/pool_table"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:drawableTop="@drawable/ic_pool"
-                        android:padding="16dp" />
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@drawable/ic_pooltable"
+                            android:contentDescription="@string/pool_table"
+                            android:scaleType="centerInside" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/pool_table"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:layout_marginTop="8dp" />
+                    </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
                 <!-- Ping Pong -->
@@ -95,18 +123,32 @@
                     android:clickable="true"
                     android:focusable="true">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:orientation="vertical"
                         android:gravity="center"
-                        android:text="@string/ping_pong"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:drawableTop="@drawable/ic_pingpong"
-                        android:padding="16dp" />
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@drawable/ic_pptable"
+                            android:contentDescription="@string/ping_pong"
+                            android:scaleType="centerInside" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/ping_pong"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:layout_marginTop="8dp" />
+                    </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Court -->
+                <!-- Multipurpose Court -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/btnCourt"
                     android:layout_width="0dp"
@@ -118,15 +160,29 @@
                     android:clickable="true"
                     android:focusable="true">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:orientation="vertical"
                         android:gravity="center"
-                        android:text="@string/multipurpose_court"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:drawableTop="@drawable/ic_court"
-                        android:padding="16dp" />
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@drawable/ic_field"
+                            android:contentDescription="@string/multipurpose_court"
+                            android:scaleType="centerInside" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/multipurpose_court"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:layout_marginTop="8dp" />
+                    </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
                 <!-- Music Room -->
@@ -141,15 +197,29 @@
                     android:clickable="true"
                     android:focusable="true">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:orientation="vertical"
                         android:gravity="center"
-                        android:text="@string/music_room"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:drawableTop="@drawable/ic_music"
-                        android:padding="16dp" />
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@drawable/ic_musicroom"
+                            android:contentDescription="@string/music_room"
+                            android:scaleType="centerInside" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/music_room"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:layout_marginTop="8dp" />
+                    </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
                 <!-- Lecturer Consultation -->
@@ -164,15 +234,29 @@
                     android:clickable="true"
                     android:focusable="true">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:orientation="vertical"
                         android:gravity="center"
-                        android:text="@string/lecturer_consultation"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:drawableTop="@drawable/ic_lecturer"
-                        android:padding="16dp" />
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@drawable/ic_consultation"
+                            android:contentDescription="@string/lecturer_consultation"
+                            android:scaleType="centerInside" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/lecturer_consultation"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:layout_marginTop="8dp" />
+                    </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
             </GridLayout>
