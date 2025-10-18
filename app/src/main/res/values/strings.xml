@@ -59,4 +59,64 @@
     <string name="consultation">Consultation</string>
     <string name="lecturer_consultation">Lecturer Consultation</string>
 
+    <!-- Error Messages -->
+    <string name="error_no_service_selected">Error: No service selected</string>
+    <string name="service_not_found">Service not found</string>
+    <string name="error_loading_service">Error loading service: %s</string>
+    <string name="error_loading_lecturers">Error loading lecturers: %s</string>
+    <string name="unknown_layout_type">Unknown layout type</string>
+    <string name="no_lecturers_available">No lecturers available</string>
+
+    <!-- Service Info Format -->
+    <string name="available_time_format">Available: %1$s - %2$s</string>
+    <string name="max_duration_hours">Max Duration: %d hours</string>
+    <string name="price_format">Price: RM %s</string>
+    <string name="price_free">Price: Free</string>
+
+    <!-- Single Layout Texts -->
+    <string name="music_room_available">Music Room Available</string>
+    <string name="court_available">Court Available</string>
+
+    <!-- Navigation -->
+    <string name="selected_location">Selected: %s</string>
+
+    <!-- Item Lecturer Strings -->
+    <string name="lecturer_icon">Lecturer icon</string>
+    <string name="lecturer_name_placeholder">Dr. Smith</string>
+    <string name="department_placeholder">Computer Science</string>
+    <string name="availability_placeholder">Available: Mon, Wed, Fri</string>
+    <string name="arrow_icon">Arrow</string>
+
+    <!-- Discussion Room  -->
+    <string name="select_discussion_room">Select a Discussion Room</string>
+    <string name="large_rooms_label">Large Rooms (6-8 People)</string>
+    <string name="room_l1">Room L1</string>
+    <string name="room_l2">Room L2</string>
+    <string name="small_rooms_label">Small Rooms (2-4 People)</string>
+    <string name="room_s1">Room S1</string>
+    <string name="room_s2">Room S2</string>
+    <string name="room_s3">Room S3</string>
+    <string name="large_room">Large Room</string>
+    <string name="small_room">Small Room</string>
+
+    <!-- Lecturer List  -->
+    <string name="select_lecturer">Select a Lecturer</string>
+
+    <!-- Ping Pong Table Strings -->
+    <string name="select_ping_pong_table">Select a Ping Pong Table</string>
+    <string name="ping_pong_table">Ping Pong Table</string>
+    <string name="table_1">Table 1</string>
+    <string name="table_2">Table 2</string>
+
+    <!-- Pool Table Strings -->
+    <string name="select_pool_table">Select a Pool Table</string>
+    <string name="pool_table_1">Pool Table 1</string>
+    <string name="pool_table_2">Pool Table 2</string>
+
+    <!-- Single Layout Strings -->
+    <string name="available">Available</string>
+    <string name="location_icon">Location Icon</string>
+    <string name="tap_for_time_slots">Tap to see available time slots</string>
+
+
 </resources>

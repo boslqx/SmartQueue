@@ -24,6 +24,10 @@
         <activity android:name=".HistoryActivity" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".ResetPasswordActivity" />
+        <activity android:name=".ServiceModel" />
+        <activity android:name=".LecturerAdapter" />
+        <activity android:name=".LecturerModel"
+            android:exported="false"/>
 
         <activity
             android:name=".WelcomeActivity"
