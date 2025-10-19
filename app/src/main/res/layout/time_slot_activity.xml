@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/primary">
+
+        <TextView
+            android:id="@+id/tvServiceTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/select_time_slot"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/tvLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/location"
+            android:textSize="14sp"
+            android:textColor="@color/text_dark"
+            android:gravity="center"
+            android:layout_marginTop="4dp" />
+
+    </LinearLayout>
+
+    <!-- Date Selection -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/background">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/select_date"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"
+            android:layout_marginBottom="8dp" />
+
+        <DatePicker
+            android:id="@+id/datePicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:datePickerMode="spinner"
+            android:background="@color/background" />
+
+    </LinearLayout>
+
+    <!-- Time Slots -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/background">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/available_time_slots"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"
+            android:layout_marginBottom="12dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTimeSlots"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <!-- Confirm Button -->
+    <Button
+        android:id="@+id/btnConfirmBooking"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/confirm_booking"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:background="@color/primary"
+        android:textColor="@color/text_dark"
+        android:layout_margin="16dp"
+        android:padding="12dp" />
+
+</LinearLayout>

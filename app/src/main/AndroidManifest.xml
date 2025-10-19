@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartQueue">
 
-        <!-- Activities ONLY - NO models or adapters! -->
+        <!-- Activities -->
         <activity android:name=".LoginActivity" android:exported="false" />
         <activity android:name=".RegisterStep1Activity" android:exported="false" />
         <activity android:name=".RegisterStep2Activity" android:exported="false" />
@@ -25,6 +25,8 @@
         <activity android:name=".HistoryActivity" android:exported="false" />
         <activity android:name=".SettingsActivity" android:exported="false" />
         <activity android:name=".ResetPasswordActivity" android:exported="false" />
+        <activity android:name=".ConfirmBookingActivity" android:exported="false" />
+        <activity android:name=".TimeSlotActivity" android:exported="false" />
 
         <!-- Main launcher activity -->
         <activity

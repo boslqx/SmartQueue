@@ -118,5 +118,16 @@
     <string name="location_icon">Location Icon</string>
     <string name="tap_for_time_slots">Tap to see available time slots</string>
 
+    <string name="time_range_placeholder">08:00 - 09:00</string>
+    <string name="status_available">Available</string>
+    <string name="status_booked">Booked</string>
+    <string name="status_selected">Selected</string>
+    <string name="select_time_slot">Select Time Slot</string>
+    <string name="select_date">Select Date</string>
+    <string name="available_time_slots">Available Time Slots</string>
+    <string name="confirm_booking">Confirm Booking</string>
+    <string name="please_select_time_slot">Please select a time slot</string>
+    <string name="location">Location</string>
+
 
 </resources>

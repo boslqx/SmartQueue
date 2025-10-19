@@ -346,16 +346,8 @@ public class SelectSlotActivity extends AppCompatActivity {
     }
 
     private void navigateToTimeSlots(String locationId, String extraInfo) {
-        String message = "Selected: " + locationId;
-        if (extraInfo != null) {
-            message += " (" + extraInfo + ")";
-        }
-        Toast.makeText(this, message + "\n\nTimeSlotActivity coming next!",
-                Toast.LENGTH_LONG).show();
-
         Log.d(TAG, "Navigation to time slots: " + locationId);
 
-        /* UNCOMMENT THIS AFTER CREATING TimeSlotActivity:
         Intent intent = new Intent(SelectSlotActivity.this, TimeSlotActivity.class);
         intent.putExtra("serviceType", serviceType);
         intent.putExtra("serviceName", serviceModel.getName());
@@ -367,6 +359,6 @@ public class SelectSlotActivity extends AppCompatActivity {
         intent.putExtra("isPaid", serviceModel.isIs_paid());
         intent.putExtra("price", serviceModel.getPrice());
         startActivity(intent);
-        */
+
     }
 }

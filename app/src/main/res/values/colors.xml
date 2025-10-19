@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="nav_item_color">#333333</color>
+    <!-- Add these to your res/values/colors.xml -->
     <color name="background">#FCF9EA</color>
-    <color name="primary">#333333</color>
+    <color name="primary">#BADFDB</color>
+    <color name="accent">#FFA4A4</color>
+    <color name="accent_light">#FFBDBD</color>
+
+    <!-- Status colors -->
+    <color name="gray_light">#E0E0E0</color>
+    <color name="available_color">#4CAF50</color>
+    <color name="booked_color">#FFA4A4</color>
+    <color name="selected_color">#BADFDB</color>
+    <color name="text_dark">#333333</color>
 </resources>
