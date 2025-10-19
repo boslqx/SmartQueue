@@ -27,6 +27,7 @@
         <activity android:name=".ResetPasswordActivity" android:exported="false" />
         <activity android:name=".ConfirmBookingActivity" android:exported="false" />
         <activity android:name=".TimeSlotActivity" android:exported="false" />
+        <activity android:name=".PaymentActivity" android:exported="false" />
 
         <!-- Main launcher activity -->
         <activity

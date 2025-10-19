@@ -19,7 +19,7 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:src="@drawable/ic_back"
-            android:contentDescription="Back"
+            android:contentDescription="@string/back"
             android:clickable="true"
             android:focusable="true"
             app:tint="@color/text_dark" />
@@ -29,7 +29,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Select Location"
+            android:text="@string/select_location"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/text_dark"

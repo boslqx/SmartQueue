@@ -211,29 +211,20 @@ public class TimeSlotActivity extends AppCompatActivity {
 
     private void confirmBooking() {
         if (selectedSlot == null) {
-            Toast.makeText(this, "Please select a time slot", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.please_select_time_slot, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // For now, just show a success message
-        // In the next step, we'll create ConfirmBookingActivity
-        String message = String.format("Booking confirmed!\n%s\n%s\n%s",
-                serviceName, locationId, selectedSlot.getTimeRange());
-
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-
-        // TODO: Uncomment this after creating ConfirmBookingActivity
-        /*
         Intent intent = new Intent(TimeSlotActivity.this, ConfirmBookingActivity.class);
         intent.putExtra("serviceType", serviceType);
         intent.putExtra("serviceName", serviceName);
         intent.putExtra("locationId", locationId);
+        intent.putExtra("extraInfo", extraInfo);
         intent.putExtra("date", selectedDate);
         intent.putExtra("startTime", selectedSlot.getStartTime());
         intent.putExtra("endTime", selectedSlot.getEndTime());
         intent.putExtra("isPaid", isPaid);
         intent.putExtra("price", price);
         startActivity(intent);
-        */
     }
 }

@@ -6,6 +6,8 @@
     <!-- Welcome Page -->
     <string name="register">Register</string>
     <string name="login">Login</string>
+    <string name="slogan">Book your space, skip the wait</string>
+    <string name="slogan2">New to campus? Start here!</string>
 
     <!-- Register -->
     <string name="full_name">Full name</string>
@@ -130,5 +132,22 @@
     <string name="please_select_time_slot">Please select a time slot</string>
     <string name="location">Location</string>
 
+    <!-- Select Slot -->
+    <string name="back">Back</string>
+    <string name="select_location">Select Location</string>
+    <string name="available_time_range">Available: 08:00 - 21:00</string>
+    <string name="max_duration_hour">Max Duration: 1 hour</string>
+
+
+    <!-- Confirm Booking -->
+    <string name="booking_summary">Booking Summary</string>
+    <string name="date">Date</string>
+    <string name="time_slot">Time Slot</string>
+    <string name="duration">Duration</string>
+    <string name="total_amount">Total Amount</string>
+    <string name="cancel">Cancel</string>
+    <string name="booking_confirmed">Booking Confirmed!</string>
+    <string name="booking_failed">Booking failed. Please try again.</string>
+    <string name="free">Free</string>
 
 </resources>
