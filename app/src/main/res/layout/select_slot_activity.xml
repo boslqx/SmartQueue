@@ -53,35 +53,76 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <TextView
-                android:id="@+id/tvAvailableTime"
+            <!-- Available Time Row -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Available: 08:00 - 21:00"
-                android:textSize="14sp"
-                android:drawableLeft="@drawable/ic_time"
-                android:drawablePadding="8dp" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/tvMaxDuration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Max Duration: 1 hour"
-                android:textSize="14sp"
-                android:layout_marginTop="8dp"
-                android:drawableLeft="@drawable/ic_duration"
-                android:drawablePadding="8dp" />
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_time"
+                    android:contentDescription="Time" />
 
-            <TextView
-                android:id="@+id/tvPrice"
+                <TextView
+                    android:id="@+id/tvAvailableTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Available: 08:00 - 21:00"
+                    android:textSize="14sp"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+            <!-- Max Duration Row -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Price: Free"
-                android:textSize="14sp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="8dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_duration"
+                    android:contentDescription="Duration" />
+
+                <TextView
+                    android:id="@+id/tvMaxDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Max Duration: 1 hour"
+                    android:textSize="14sp"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+            <!-- Price Row -->
+            <LinearLayout
+                android:id="@+id/priceContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
                 android:layout_marginTop="8dp"
-                android:drawableLeft="@drawable/ic_money"
-                android:drawablePadding="8dp"
-                android:visibility="gone" />
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_money"
+                    android:contentDescription="Price" />
+
+                <TextView
+                    android:id="@+id/tvPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Price: Free"
+                    android:textSize="14sp"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
