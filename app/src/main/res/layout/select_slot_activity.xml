@@ -21,7 +21,8 @@
             android:src="@drawable/ic_back"
             android:contentDescription="Back"
             android:clickable="true"
-            android:focusable="true" />
+            android:focusable="true"
+            app:tint="@color/text_dark" />
 
         <TextView
             android:id="@+id/tvServiceName"
@@ -31,7 +32,7 @@
             android:text="Select Location"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@color/primary"
+            android:textColor="@color/text_dark"
             android:gravity="center" />
 
         <View
@@ -45,7 +46,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         app:cardCornerRadius="12dp"
-        app:cardElevation="4dp">
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="@color/primary">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -64,7 +66,8 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/ic_time"
-                    android:contentDescription="Time" />
+                    android:contentDescription="Time"
+                    app:tint="@color/text_dark" />
 
                 <TextView
                     android:id="@+id/tvAvailableTime"
@@ -72,6 +75,7 @@
                     android:layout_height="wrap_content"
                     android:text="Available: 08:00 - 21:00"
                     android:textSize="14sp"
+                    android:textColor="@color/text_dark"
                     android:layout_marginStart="8dp" />
             </LinearLayout>
 
@@ -87,7 +91,8 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/ic_duration"
-                    android:contentDescription="Duration" />
+                    android:contentDescription="Duration"
+                    app:tint="@color/text_dark" />
 
                 <TextView
                     android:id="@+id/tvMaxDuration"
@@ -95,6 +100,7 @@
                     android:layout_height="wrap_content"
                     android:text="Max Duration: 1 hour"
                     android:textSize="14sp"
+                    android:textColor="@color/text_dark"
                     android:layout_marginStart="8dp" />
             </LinearLayout>
 
@@ -112,7 +118,8 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/ic_money"
-                    android:contentDescription="Price" />
+                    android:contentDescription="Price"
+                    app:tint="@color/text_dark" />
 
                 <TextView
                     android:id="@+id/tvPrice"
@@ -120,6 +127,7 @@
                     android:layout_height="wrap_content"
                     android:text="Price: Free"
                     android:textSize="14sp"
+                    android:textColor="@color/text_dark"
                     android:layout_marginStart="8dp" />
             </LinearLayout>
 

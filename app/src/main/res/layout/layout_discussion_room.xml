@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:padding="16dp">
 
     <LinearLayout
@@ -17,6 +18,7 @@
             android:text="@string/select_discussion_room"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:textColor="@color/text_dark"
             android:layout_marginBottom="16dp" />
 
         <!-- Large Rooms Section -->
@@ -26,6 +28,7 @@
             android:text="@string/large_rooms_label"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:textColor="@color/text_dark"
             android:layout_marginBottom="8dp" />
 
         <LinearLayout
@@ -43,6 +46,7 @@
                 android:layout_margin="8dp"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/primary"
                 android:foreground="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true">
@@ -66,6 +70,7 @@
                         android:text="@string/room_l1"
                         android:textSize="16sp"
                         android:textStyle="bold"
+                        android:textColor="@color/text_dark"
                         android:layout_marginTop="8dp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -78,6 +83,7 @@
                 android:layout_margin="8dp"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/primary"
                 android:foreground="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true">
@@ -101,6 +107,7 @@
                         android:text="@string/room_l2"
                         android:textSize="16sp"
                         android:textStyle="bold"
+                        android:textColor="@color/text_dark"
                         android:layout_marginTop="8dp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -113,6 +120,7 @@
             android:text="@string/small_rooms_label"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:textColor="@color/text_dark"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp" />
 
@@ -131,6 +139,7 @@
                 android:layout_margin="8dp"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/accent_light"
                 android:foreground="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true">
@@ -154,6 +163,7 @@
                         android:text="@string/room_s1"
                         android:textSize="14sp"
                         android:textStyle="bold"
+                        android:textColor="@color/text_dark"
                         android:layout_marginTop="8dp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -166,6 +176,7 @@
                 android:layout_margin="8dp"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/accent_light"
                 android:foreground="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true">
@@ -189,6 +200,7 @@
                         android:text="@string/room_s2"
                         android:textSize="14sp"
                         android:textStyle="bold"
+                        android:textColor="@color/text_dark"
                         android:layout_marginTop="8dp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -201,6 +213,7 @@
                 android:layout_margin="8dp"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/accent_light"
                 android:foreground="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true">
@@ -224,6 +237,7 @@
                         android:text="@string/room_s3"
                         android:textSize="14sp"
                         android:textStyle="bold"
+                        android:textColor="@color/text_dark"
                         android:layout_marginTop="8dp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
+    android:background="@color/background"
     android:gravity="center">
 
     <TextView
@@ -13,6 +14,7 @@
         android:text="@string/select_ping_pong_table"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:textColor="@color/text_dark"
         android:layout_marginBottom="24dp" />
 
     <!-- Side by Side Layout -->
@@ -32,6 +34,7 @@
             android:layout_margin="8dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/accent"
             android:foreground="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true">
@@ -41,15 +44,13 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:padding="16dp"
-                android:background="#FF6F00">
+                android:padding="16dp">
 
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:src="@drawable/ic_pptable"
-                    android:contentDescription="@string/ping_pong_table"
-                    app:tint="@android:color/white" />
+                    android:contentDescription="@string/ping_pong_table" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -57,7 +58,7 @@
                     android:text="@string/table_1"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/text_dark"
                     android:layout_marginTop="8dp" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -71,6 +72,7 @@
             android:layout_margin="8dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/accent_light"
             android:foreground="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true">
@@ -80,15 +82,13 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:padding="16dp"
-                android:background="#D32F2F">
+                android:padding="16dp">
 
                 <ImageView
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:src="@drawable/ic_pptable"
-                    android:contentDescription="@string/ping_pong_table"
-                    app:tint="@android:color/white" />
+                    android:contentDescription="@string/ping_pong_table" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -96,7 +96,7 @@
                     android:text="@string/table_2"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/text_dark"
                     android:layout_marginTop="8dp" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>

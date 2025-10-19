@@ -5,13 +5,15 @@
     android:orientation="vertical"
     android:gravity="center"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background">
 
     <ImageView
         android:src="@android:drawable/checkbox_on_background"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:contentDescription="@string/success_icon_desc" />
+        android:contentDescription="@string/success_icon_desc"
+        xmlns:app="http://schemas.android.com/apk/res-auto" />
 
     <TextView
         android:id="@+id/tvSuccess"
@@ -19,13 +21,25 @@
         android:layout_height="wrap_content"
         android:text="@string/registration_successful"
         android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_dark"
         android:layout_marginTop="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome to SmartQueue!"
+        android:textSize="16sp"
+        android:textColor="@color/text_dark"
+        android:layout_marginTop="8dp" />
 
     <Button
         android:id="@+id/btnContinue"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/continue_to_app"
-        android:layout_marginTop="20dp" />
+        android:backgroundTint="@color/accent"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="32dp" />
 
 </LinearLayout>

@@ -43,6 +43,7 @@
     <string name="welcome_back">Welcome Back!</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="sign_up_prompt">Don\'t have an account? Sign up</string>
+    <string name="create_account">Create Account</string>
 
     <!-- Recent Activity -->
     <string name="activity_title">Activity Title</string>
