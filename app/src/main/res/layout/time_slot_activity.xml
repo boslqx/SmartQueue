@@ -15,6 +15,16 @@
         android:padding="16dp"
         android:background="@color/primary">
 
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_back"
+            android:contentDescription="@string/back"
+            android:clickable="true"
+            android:focusable="true"
+            app:tint="@color/text_dark" />
+
         <TextView
             android:id="@+id/tvServiceTitle"
             android:layout_width="match_parent"

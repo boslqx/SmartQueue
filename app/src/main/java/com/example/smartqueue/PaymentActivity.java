@@ -3,7 +3,9 @@ package com.example.smartqueue;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +28,7 @@ public class PaymentActivity extends AppCompatActivity {
     private TextView tvService, tvAmount, tvLocation, tvTimeSlot;
     private RadioGroup rgPaymentMethod;
     private Button btnPay;
+    private ImageView btnBack; // Added back button
 
     private String serviceType, serviceName, locationId, locationName, startTime, endTime;
     private double price;
@@ -44,6 +47,7 @@ public class PaymentActivity extends AppCompatActivity {
         initializeViews();
         getIntentData();
         displayPaymentInfo();
+        setupBackButton(); // Setup back button
 
         btnPay.setOnClickListener(v -> processPayment());
 
@@ -60,10 +64,42 @@ public class PaymentActivity extends AppCompatActivity {
         tvTimeSlot = findViewById(R.id.tvTimeSlot);
         rgPaymentMethod = findViewById(R.id.rgPaymentMethod);
         btnPay = findViewById(R.id.btnPay);
+        btnBack = findViewById(R.id.btnBack); // Initialize back button
 
         // Initially disable pay button until method selected
         btnPay.setEnabled(false);
         btnPay.setAlpha(0.6f);
+    }
+
+    // Added back button functionality
+    private void setupBackButton() {
+        btnBack.setOnClickListener(v -> onBackPressed());
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Optional: Show confirmation if payment is in progress
+        if (!btnPay.isEnabled() || btnPay.getText().toString().equals("Processing...")) {
+            // Payment is being processed, ask for confirmation
+            showBackConfirmationDialog();
+        } else {
+            navigateBack();
+        }
+    }
+
+    private void showBackConfirmationDialog() {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Leave Payment?")
+                .setMessage("Are you sure you want to leave? Your payment progress will be lost.")
+                .setPositiveButton("Leave", (dialog, which) -> navigateBack())
+                .setNegativeButton("Stay", null)
+                .show();
+    }
+
+    private void navigateBack() {
+        super.onBackPressed();
+        // Add smooth transition
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     private void getIntentData() {
@@ -171,12 +207,6 @@ public class PaymentActivity extends AppCompatActivity {
         booking.put("price", price);
         booking.put("amount", price); // Match your existing field name
         booking.put("payment_status", "paid"); // Match your existing field name
-
-        // Add date field if needed (extract from startTime or use current date)
-        // booking.put("date", "2025-10-21"); // You might need to extract this
-
-        // Add duration field if needed
-        // booking.put("duration", 1); // You might need to calculate this
 
         // Save payment first, then booking
         db.collection("payments").document(paymentId).set(payment)

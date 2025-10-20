@@ -3,8 +3,10 @@ package com.example.smartqueue;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,7 +25,6 @@ public class TimeSlotActivity extends AppCompatActivity {
 
     private static final String TAG = "TimeSlotActivity";
     private FirebaseFirestore db;
-
     private String serviceType, locationId, serviceName, extraInfo;
     private String availableFrom, availableTo;
     private int maxDuration;
@@ -34,6 +35,7 @@ public class TimeSlotActivity extends AppCompatActivity {
     private DatePicker datePicker;
     private RecyclerView rvTimeSlots;
     private Button btnConfirmBooking;
+    private ImageView btnBack; // Added back button
 
     private List<TimeSlotModel> timeSlots = new ArrayList<>();
     private TimeSlotAdapter adapter;
@@ -50,16 +52,17 @@ public class TimeSlotActivity extends AppCompatActivity {
         setupRecyclerView();
         setupDatePicker();
         setupButton();
+        setupBackButton(); // Added back button setup
     }
 
     private void initializeViews() {
         db = FirebaseFirestore.getInstance();
-
         tvServiceTitle = findViewById(R.id.tvServiceTitle);
         tvLocation = findViewById(R.id.tvLocation);
         datePicker = findViewById(R.id.datePicker);
         rvTimeSlots = findViewById(R.id.rvTimeSlots);
         btnConfirmBooking = findViewById(R.id.btnConfirmBooking);
+        btnBack = findViewById(R.id.btnBack); // Initialize back button
     }
 
     private void getIntentData() {
@@ -77,7 +80,6 @@ public class TimeSlotActivity extends AppCompatActivity {
         // Update UI
         tvServiceTitle.setText(serviceName);
         tvLocation.setText(locationId + (extraInfo != null ? " (" + extraInfo + ")" : ""));
-
         Log.d(TAG, "Service: " + serviceType + ", Location: " + locationId);
         Log.d(TAG, "Available: " + availableFrom + " - " + availableTo);
     }
@@ -86,19 +88,15 @@ public class TimeSlotActivity extends AppCompatActivity {
         adapter = new TimeSlotAdapter(timeSlots, position -> {
             // Handle slot selection
             selectedSlot = timeSlots.get(position);
-
             // Deselect all other slots
             for (TimeSlotModel slot : timeSlots) {
                 slot.setSelected(false);
             }
-
             // Select current slot
             selectedSlot.setSelected(true);
             adapter.notifyDataSetChanged();
-
             btnConfirmBooking.setEnabled(true);
         });
-
         rvTimeSlots.setLayoutManager(new GridLayoutManager(this, 2));
         rvTimeSlots.setAdapter(adapter);
     }
@@ -110,7 +108,6 @@ public class TimeSlotActivity extends AppCompatActivity {
 
         // Set initial selected date
         selectedDate = getSelectedDate();
-
         datePicker.setOnDateChangedListener((view, year, month, day) -> {
             selectedDate = String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month + 1, day);
             loadTimeSlots();
@@ -125,6 +122,21 @@ public class TimeSlotActivity extends AppCompatActivity {
         btnConfirmBooking.setOnClickListener(v -> confirmBooking());
     }
 
+    // Added back button functionality
+    private void setupBackButton() {
+        btnBack.setOnClickListener(v -> onBackPressed());
+    }
+
+    @Override
+    public void onBackPressed() {
+        // You can add custom back navigation logic here
+        // For example, go back to the previous activity
+        super.onBackPressed();
+
+        // Optional: Add fade animation
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    }
+
     private String getSelectedDate() {
         int year = datePicker.getYear();
         int month = datePicker.getMonth() + 1; // Month is 0-based
@@ -134,17 +146,14 @@ public class TimeSlotActivity extends AppCompatActivity {
 
     private void loadTimeSlots() {
         Log.d(TAG, "Loading time slots for: " + selectedDate);
-
         // Generate all possible time slots first
         generateTimeSlots();
-
         // Then fetch booked slots from Firestore and mark them as unavailable
         fetchBookedSlots();
     }
 
     private void generateTimeSlots() {
         timeSlots.clear();
-
         try {
             // Parse available time range
             int startHour = Integer.parseInt(availableFrom.split(":")[0]);
@@ -155,14 +164,11 @@ public class TimeSlotActivity extends AppCompatActivity {
                 String startTime = String.format(Locale.getDefault(), "%02d:00", hour);
                 String endTime = String.format(Locale.getDefault(), "%02d:00", hour + 1);
                 String timeRange = startTime + " - " + endTime;
-
                 TimeSlotModel slot = new TimeSlotModel(timeRange, startTime, endTime, true);
                 timeSlots.add(slot);
             }
-
             adapter.notifyDataSetChanged();
             Log.d(TAG, "Generated " + timeSlots.size() + " time slots");
-
         } catch (Exception e) {
             Log.e(TAG, "Error generating time slots: " + e.getMessage());
             Toast.makeText(this, "Error generating time slots", Toast.LENGTH_SHORT).show();
@@ -178,15 +184,12 @@ public class TimeSlotActivity extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     Log.d(TAG, "Found " + queryDocumentSnapshots.size() + " existing bookings");
-
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         String bookedStartTime = document.getString("startTime");
                         String bookedEndTime = document.getString("endTime");
-
                         // Mark overlapping slots as unavailable
                         markSlotsAsBooked(bookedStartTime, bookedEndTime);
                     }
-
                     adapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> {
@@ -226,5 +229,8 @@ public class TimeSlotActivity extends AppCompatActivity {
         intent.putExtra("isPaid", isPaid);
         intent.putExtra("price", price);
         startActivity(intent);
+
+        // Optional: Add transition animation
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 }
