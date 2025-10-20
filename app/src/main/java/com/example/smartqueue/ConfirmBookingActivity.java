@@ -11,7 +11,6 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -101,7 +100,7 @@ public class ConfirmBookingActivity extends AppCompatActivity {
             double totalAmount = duration * price;
             tvTotalAmount.setText(String.format(Locale.getDefault(), "RM %.2f", totalAmount));
         } else {
-            tvTotalAmount.setText(getString(R.string.free));
+            tvTotalAmount.setText("Free");
         }
     }
 
@@ -112,6 +111,7 @@ public class ConfirmBookingActivity extends AppCompatActivity {
             long endMillis = format.parse(end).getTime();
             return (int) ((endMillis - startMillis) / (1000 * 60 * 60));
         } catch (Exception e) {
+            Log.e(TAG, "Error calculating duration", e);
             return 1; // Default to 1 hour if calculation fails
         }
     }
@@ -128,6 +128,10 @@ public class ConfirmBookingActivity extends AppCompatActivity {
             return;
         }
 
+        // Disable button to prevent double-clicking
+        btnConfirm.setEnabled(false);
+        btnConfirm.setText("Processing...");
+
         if (isPaid) {
             // Redirect to PaymentActivity
             navigateToPayment();
@@ -142,6 +146,7 @@ public class ConfirmBookingActivity extends AppCompatActivity {
         intent.putExtra("serviceType", serviceType);
         intent.putExtra("serviceName", serviceName);
         intent.putExtra("locationId", locationId);
+        intent.putExtra("extraInfo", extraInfo);
         intent.putExtra("date", date);
         intent.putExtra("startTime", startTime);
         intent.putExtra("endTime", endTime);
@@ -153,22 +158,35 @@ public class ConfirmBookingActivity extends AppCompatActivity {
 
     private void createBookingInFirestore() {
         String userId = mAuth.getCurrentUser().getUid();
-        int duration = calculateDuration(startTime, endTime);
-        double totalAmount = isPaid ? duration * price : 0.0;
+        String userEmail = mAuth.getCurrentUser().getEmail();
+        String userName = mAuth.getCurrentUser().getDisplayName();
 
+        if (userName == null || userName.isEmpty()) {
+            userName = userEmail != null ? userEmail.split("@")[0] : "User";
+        }
+
+        int duration = calculateDuration(startTime, endTime);
+        double amount = isPaid ? duration * price : 0.0;
+
+        // Match your database schema exactly
         Map<String, Object> booking = new HashMap<>();
-        booking.put("serviceType", serviceType);
-        booking.put("serviceName", serviceName);
-        booking.put("locationId", locationId);
-        booking.put("userId", userId);
+        booking.put("service_type", serviceType);  // Changed to match schema
+        booking.put("service_name", serviceName);  // Changed to match schema
+        booking.put("location_id", locationId);    // Changed to match schema
+        booking.put("user_id", userId);            // Changed to match schema
+        booking.put("user_name", userName);        // Added
+        booking.put("user_email", userEmail);      // Added
         booking.put("date", date);
-        booking.put("startTime", startTime);
-        booking.put("endTime", endTime);
+        booking.put("start_time", startTime);      // Changed to match schema
+        booking.put("end_time", endTime);          // Changed to match schema
         booking.put("duration", duration);
-        booking.put("isPaid", isPaid);
-        booking.put("totalAmount", totalAmount);
         booking.put("status", "confirmed");
-        booking.put("createdAt", Timestamp.now());
+        booking.put("payment_status", isPaid ? "pending" : "free");  // Added
+        booking.put("amount", amount);
+        booking.put("created_at", Timestamp.now());
+        booking.put("updated_at", Timestamp.now());
+
+        Log.d(TAG, "Creating booking with data: " + booking.toString());
 
         db.collection("bookings")
                 .add(booking)
@@ -177,18 +195,21 @@ public class ConfirmBookingActivity extends AppCompatActivity {
                     showSuccessAndNavigate(documentReference.getId());
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error creating booking: " + e.getMessage());
-                    Toast.makeText(this, R.string.booking_failed, Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Error creating booking: " + e.getMessage(), e);
+                    Toast.makeText(this, "Booking failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+
+                    // Re-enable button
+                    btnConfirm.setEnabled(true);
+                    btnConfirm.setText("Confirm Booking");
                 });
     }
 
     private void showSuccessAndNavigate(String bookingId) {
-        Toast.makeText(this, R.string.booking_confirmed, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Booking confirmed successfully!", Toast.LENGTH_LONG).show();
 
         // Navigate to booking status or back to dashboard
-        Intent intent = new Intent(ConfirmBookingActivity.this, QueueStatusActivity.class);
-        intent.putExtra("bookingId", bookingId);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        Intent intent = new Intent(ConfirmBookingActivity.this, DashboardActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }
