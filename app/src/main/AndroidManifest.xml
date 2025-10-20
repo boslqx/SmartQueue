@@ -28,6 +28,7 @@
         <activity android:name=".ConfirmBookingActivity" android:exported="false" />
         <activity android:name=".TimeSlotActivity" android:exported="false" />
         <activity android:name=".PaymentActivity" android:exported="false" />
+        <activity android:name=".PaymentSuccessActivity" android:exported="false" />
 
         <!-- Main launcher activity -->
         <activity

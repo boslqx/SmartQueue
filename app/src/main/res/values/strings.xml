@@ -150,4 +150,39 @@
     <string name="booking_failed">Booking failed. Please try again.</string>
     <string name="free">Free</string>
 
+    <!-- Payment Activity Strings -->
+    <string name="payment">Payment</string>
+    <string name="service_label">Service:</string>
+    <string name="location_label">Location:</string>
+    <string name="time_slot_label">Time Slot:</string>
+    <string name="total_amount_label">Total Amount:</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="touch_n_go">Touch \'n Go</string>
+    <string name="touch_n_go_ewallet">Touch \'n Go eWallet</string>
+    <string name="credit_card">Credit Card</string>
+    <string name="credit_debit_card">Credit / Debit Card</string>
+    <string name="pay_now">Pay Now</string>
+    <string name="payment_secure">🔒 Your payment is secure and encrypted</string>
+
+    <!-- Placeholder strings -->
+    <string name="car_wash">Car Wash</string>
+    <string name="main_branch">Main Branch</string>
+    <string name="time_slot_placeholder">10:00 - 11:00</string>
+    <string name="amount_placeholder">RM 25.00</string>
+
+    <!-- Content Descriptions -->
+    <string name="touch_n_go_icon">Touch \'n Go icon</string>
+    <string name="credit_card_icon">Credit card icon</string>
+
+    <!-- Payment Success Strings -->
+    <string name="success_icon">Success icon</string>
+    <string name="payment_successful">Payment Successful!</string>
+    <string name="booking_id_prefix">Booking ID:</string>
+    <string name="amount_prefix">Amount:</string>
+    <string name="done">Done</string>
+    <string name="redirecting_message">Redirecting in 5 seconds...</string>
+
+    <!-- Placeholder strings (will be replaced dynamically) -->
+    <string name="booking_id_placeholder">ABC12345</string>
+    <string name="amount_placeholder_success">RM 25.00</string>
 </resources>
