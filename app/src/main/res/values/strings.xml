@@ -185,4 +185,9 @@
     <!-- Placeholder strings (will be replaced dynamically) -->
     <string name="booking_id_placeholder">ABC12345</string>
     <string name="amount_placeholder_success">RM 25.00</string>
+
+    <!-- Queue Status Strings -->
+    <string name="no_bookings_found">No bookings found</string>
+    <string name="error_loading_bookings">Error loading bookings: %s</string>
+    <string name="failed_to_load_bookings">Failed to load bookings</string>
 </resources>
