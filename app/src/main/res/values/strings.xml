@@ -139,6 +139,15 @@
     <string name="max_duration_hour">Max Duration: 1 hour</string>
 
 
+    <!-- Time Slot Selection -->
+    <string name="status_max_reached">Max reached</string>
+    <string name="consecutive_slots_required">Please select consecutive time slots</string>
+    <string name="slot_already_booked">This time slot is already booked</string>
+    <string name="max_hours_allowed">Maximum %d hour(s) allowed</string>
+    <string name="error_generating_slots">Error generating time slots</string>
+    <string name="error_loading_availability">Error loading availability</string>
+    <string name="select_consecutive">Select consecutive slots</string>
+
     <!-- Confirm Booking -->
     <string name="booking_summary">Booking Summary</string>
     <string name="date">Date</string>

@@ -1,4 +1,3 @@
-// TimeSlotAdapter.java
 package com.example.smartqueue;
 
 import android.view.LayoutInflater;
@@ -15,14 +14,18 @@ public class TimeSlotAdapter extends RecyclerView.Adapter<TimeSlotAdapter.ViewHo
 
     private List<TimeSlotModel> timeSlots;
     private OnTimeSlotClickListener listener;
+    private int maxDuration;
+    private int currentSelectedDuration = 0;
 
     public interface OnTimeSlotClickListener {
         void onTimeSlotClick(int position);
+        void onSelectionChanged(int selectedDuration, int maxDuration);
     }
 
-    public TimeSlotAdapter(List<TimeSlotModel> timeSlots, OnTimeSlotClickListener listener) {
+    public TimeSlotAdapter(List<TimeSlotModel> timeSlots, OnTimeSlotClickListener listener, int maxDuration) {
         this.timeSlots = timeSlots;
         this.listener = listener;
+        this.maxDuration = maxDuration;
     }
 
     @NonNull
@@ -33,7 +36,6 @@ public class TimeSlotAdapter extends RecyclerView.Adapter<TimeSlotAdapter.ViewHo
         return new ViewHolder(view);
     }
 
-    // In your onBindViewHolder method, update the color logic:
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TimeSlotModel slot = timeSlots.get(position);
@@ -41,33 +43,49 @@ public class TimeSlotAdapter extends RecyclerView.Adapter<TimeSlotAdapter.ViewHo
         holder.tvTimeRange.setText(slot.getTimeRange());
 
         if (!slot.isAvailable()) {
-            // Booked slot - using your accent color
+            // Booked/Unavailable slot
             holder.cardView.setCardBackgroundColor(
-                    ContextCompat.getColor(holder.itemView.getContext(), R.color.accent_light));
-            holder.tvStatus.setText(R.string.status_booked);
+                    ContextCompat.getColor(holder.itemView.getContext(), R.color.gray_light));
+            holder.tvStatus.setText("Unavailable");
             holder.tvStatus.setTextColor(
-                    ContextCompat.getColor(holder.itemView.getContext(), R.color.booked_color));
+                    ContextCompat.getColor(holder.itemView.getContext(), R.color.text_dark));
+            holder.tvStatus.setVisibility(View.VISIBLE);
             holder.cardView.setClickable(false);
+            holder.cardView.setAlpha(0.6f);
         } else if (slot.isSelected()) {
-            // Selected slot - using your primary color
+            // Selected slot
             holder.cardView.setCardBackgroundColor(
                     ContextCompat.getColor(holder.itemView.getContext(), R.color.selected_color));
             holder.tvStatus.setText(R.string.status_selected);
             holder.tvStatus.setTextColor(
-                    ContextCompat.getColor(holder.itemView.getContext(), R.color.primary));
+                    ContextCompat.getColor(holder.itemView.getContext(), R.color.text_dark));
+            holder.tvStatus.setVisibility(View.VISIBLE);
             holder.cardView.setClickable(true);
-        } else {
-            // Available slot - using your background color
+            holder.cardView.setAlpha(1.0f);
+        } else if (currentSelectedDuration >= maxDuration) {
+            // Max duration reached - can't select more
             holder.cardView.setCardBackgroundColor(
                     ContextCompat.getColor(holder.itemView.getContext(), R.color.background));
+            holder.tvStatus.setText("Max reached");
+            holder.tvStatus.setTextColor(
+                    ContextCompat.getColor(holder.itemView.getContext(), R.color.text_dark));
+            holder.tvStatus.setVisibility(View.VISIBLE);
+            holder.cardView.setClickable(false);
+            holder.cardView.setAlpha(0.5f);
+        } else {
+            // Available slot
+            holder.cardView.setCardBackgroundColor(
+                    ContextCompat.getColor(holder.itemView.getContext(), android.R.color.white));
             holder.tvStatus.setText(R.string.status_available);
             holder.tvStatus.setTextColor(
                     ContextCompat.getColor(holder.itemView.getContext(), R.color.available_color));
+            holder.tvStatus.setVisibility(View.VISIBLE);
             holder.cardView.setClickable(true);
+            holder.cardView.setAlpha(1.0f);
         }
 
         holder.cardView.setOnClickListener(v -> {
-            if (slot.isAvailable() && !slot.isSelected()) {
+            if (slot.isAvailable()) {
                 listener.onTimeSlotClick(position);
             }
         });
@@ -76,6 +94,11 @@ public class TimeSlotAdapter extends RecyclerView.Adapter<TimeSlotAdapter.ViewHo
     @Override
     public int getItemCount() {
         return timeSlots.size();
+    }
+
+    public void updateSelectedDuration(int duration) {
+        this.currentSelectedDuration = duration;
+        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

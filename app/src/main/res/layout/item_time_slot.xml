@@ -4,28 +4,30 @@
     android:id="@+id/cardTimeSlot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
+    android:layout_margin="6dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp"
     app:cardBackgroundColor="@android:color/white"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp">
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/tvTimeRange"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/time_range_placeholder"
-            android:textSize="14sp"
+            android:text="08:00 - 09:00"
+            android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/text_dark" />
+            android:textColor="@color/text_dark"
+            android:layout_marginBottom="8dp" />
 
         <TextView
             android:id="@+id/tvStatus"
@@ -34,10 +36,10 @@
             android:text="@string/status_available"
             android:textSize="12sp"
             android:textStyle="bold"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="6dp"
-            android:background="@drawable/status_background"
-            android:textColor="@color/available_color" />
+            android:textColor="@color/available_color"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            android:background="@drawable/status_badge_rounded" />
 
     </LinearLayout>
 

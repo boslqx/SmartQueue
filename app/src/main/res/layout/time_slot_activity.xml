@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/background"
-    android:paddingTop="?attr/actionBarSize">
+    android:fitsSystemWindows="true">
 
     <!-- Header -->
     <LinearLayout
@@ -13,17 +13,31 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
+        android:paddingTop="40dp"
         android:background="@color/primary">
 
-        <ImageView
-            android:id="@+id/btnBack"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/ic_back"
-            android:contentDescription="@string/back"
-            android:clickable="true"
-            android:focusable="true"
-            app:tint="@color/text_dark" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_back"
+                android:contentDescription="@string/back"
+                android:clickable="true"
+                android:focusable="true"
+                app:tint="@color/text_dark" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tvServiceTitle"
@@ -48,38 +62,61 @@
     </LinearLayout>
 
     <!-- Date Selection -->
-    <LinearLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:background="@color/background">
+        android:layout_margin="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="@android:color/white">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/select_date"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_dark"
-            android:layout_marginBottom="8dp" />
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <DatePicker
-            android:id="@+id/datePicker"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:datePickerMode="spinner"
-            android:background="@color/background" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/select_date"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_dark"
+                android:layout_marginBottom="8dp" />
 
-    </LinearLayout>
+            <DatePicker
+                android:id="@+id/datePicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:datePickerMode="spinner"
+                android:calendarViewShown="false" />
 
-    <!-- Time Slots -->
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Duration Indicator -->
+    <TextView
+        android:id="@+id/tvSelectedDuration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Selected: 0/1 hour"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:padding="12dp"
+        android:background="@color/accent"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Time Slots Section -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:padding="16dp"
+        android:paddingHorizontal="16dp"
         android:background="@color/background">
 
         <TextView
@@ -94,7 +131,9 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvTimeSlots"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="8dp" />
 
     </LinearLayout>
 
@@ -106,9 +145,10 @@
         android:text="@string/confirm_booking"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:background="@color/primary"
-        android:textColor="@color/text_dark"
+        android:backgroundTint="@color/accent"
+        android:textColor="@android:color/white"
         android:layout_margin="16dp"
-        android:padding="12dp" />
+        android:padding="16dp"
+        android:enabled="false" />
 
 </LinearLayout>

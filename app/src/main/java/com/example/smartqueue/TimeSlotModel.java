@@ -7,6 +7,7 @@ public class TimeSlotModel {
     private String endTime;
     private boolean isAvailable;
     private boolean isSelected;
+    private int duration; // Duration in hours
 
     public TimeSlotModel() {}
 
@@ -16,6 +17,7 @@ public class TimeSlotModel {
         this.endTime = endTime;
         this.isAvailable = isAvailable;
         this.isSelected = false;
+        this.duration = 1; // Default 1 hour
     }
 
     // Getters and Setters
@@ -33,4 +35,7 @@ public class TimeSlotModel {
 
     public boolean isSelected() { return isSelected; }
     public void setSelected(boolean selected) { isSelected = selected; }
+
+    public int getDuration() { return duration; }
+    public void setDuration(int duration) { this.duration = duration; }
 }
