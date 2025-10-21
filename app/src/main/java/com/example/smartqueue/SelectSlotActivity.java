@@ -348,17 +348,25 @@ public class SelectSlotActivity extends AppCompatActivity {
     private void navigateToTimeSlots(String locationId, String extraInfo) {
         Log.d(TAG, "Navigation to time slots: " + locationId);
 
-        Intent intent = new Intent(SelectSlotActivity.this, TimeSlotActivity.class);
-        intent.putExtra("serviceType", serviceType);
-        intent.putExtra("serviceName", serviceModel.getName());
-        intent.putExtra("locationId", locationId);
-        intent.putExtra("extraInfo", extraInfo);
-        intent.putExtra("availableFrom", serviceModel.getAvailable_from());
-        intent.putExtra("availableTo", serviceModel.getAvailable_to());
-        intent.putExtra("maxDuration", serviceModel.getMax_duration());
-        intent.putExtra("isPaid", serviceModel.isIs_paid());
-        intent.putExtra("price", serviceModel.getPrice());
-        startActivity(intent);
-
+        // Check if this is a lecturer consultation
+        if ("lecturer_consultation".equals(serviceType)) {
+            // Use the new LecturerTimeSlotActivity for lecturers
+            Intent intent = new Intent(SelectSlotActivity.this, LecturerTimeSlotActivity.class);
+            intent.putExtra("lecturerId", extraInfo); // extraInfo contains the auto-generated lecturer ID
+            startActivity(intent);
+        } else {
+            // Use existing TimeSlotActivity for other services
+            Intent intent = new Intent(SelectSlotActivity.this, TimeSlotActivity.class);
+            intent.putExtra("serviceType", serviceType);
+            intent.putExtra("serviceName", serviceModel.getName());
+            intent.putExtra("locationId", locationId);
+            intent.putExtra("extraInfo", extraInfo);
+            intent.putExtra("availableFrom", serviceModel.getAvailable_from());
+            intent.putExtra("availableTo", serviceModel.getAvailable_to());
+            intent.putExtra("maxDuration", serviceModel.getMax_duration());
+            intent.putExtra("isPaid", serviceModel.isIs_paid());
+            intent.putExtra("price", serviceModel.getPrice());
+            startActivity(intent);
+        }
     }
 }

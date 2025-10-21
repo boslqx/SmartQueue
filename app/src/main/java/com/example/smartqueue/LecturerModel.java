@@ -1,33 +1,28 @@
 package com.example.smartqueue;
 
+import com.google.firebase.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class LecturerModel {
     private String id;
     private String name;
     private String department;
     private String email;
-    private List<String> available_days;
-    private String available_from;
-    private String available_to;
+    private String office_location;
     private int weekly_hours;
+    private Map<String, List<String>> consultation_schedule; // day -> list of "HH:mm-HH:mm"
+    private Timestamp created_at;
+    private Timestamp updated_at;
+
+    // Runtime field (not from Firestore)
     private int booked_hours;
 
     // Empty constructor for Firestore
-    public LecturerModel() {}
-
-    public LecturerModel(String id, String name, String department, String email,
-                         List<String> available_days, String available_from,
-                         String available_to, int weekly_hours, int booked_hours) {
-        this.id = id;
-        this.name = name;
-        this.department = department;
-        this.email = email;
-        this.available_days = available_days;
-        this.available_from = available_from;
-        this.available_to = available_to;
-        this.weekly_hours = weekly_hours;
-        this.booked_hours = booked_hours;
+    public LecturerModel() {
+        this.weekly_hours = 5;
+        this.booked_hours = 0;
     }
 
     // Getters and Setters
@@ -43,31 +38,84 @@ public class LecturerModel {
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
-    public List<String> getAvailable_days() { return available_days; }
-    public void setAvailable_days(List<String> available_days) { this.available_days = available_days; }
-
-    public String getAvailable_from() { return available_from; }
-    public void setAvailable_from(String available_from) { this.available_from = available_from; }
-
-    public String getAvailable_to() { return available_to; }
-    public void setAvailable_to(String available_to) { this.available_to = available_to; }
+    public String getOffice_location() { return office_location; }
+    public void setOffice_location(String office_location) { this.office_location = office_location; }
 
     public int getWeekly_hours() { return weekly_hours; }
     public void setWeekly_hours(int weekly_hours) { this.weekly_hours = weekly_hours; }
 
+    public Map<String, List<String>> getConsultation_schedule() { return consultation_schedule; }
+    public void setConsultation_schedule(Map<String, List<String>> consultation_schedule) {
+        this.consultation_schedule = consultation_schedule;
+    }
+
+    public Timestamp getCreated_at() { return created_at; }
+    public void setCreated_at(Timestamp created_at) { this.created_at = created_at; }
+
+    public Timestamp getUpdated_at() { return updated_at; }
+    public void setUpdated_at(Timestamp updated_at) { this.updated_at = updated_at; }
+
     public int getBooked_hours() { return booked_hours; }
     public void setBooked_hours(int booked_hours) { this.booked_hours = booked_hours; }
 
-    // Helper method to format available days
-    public String getFormattedAvailableDays() {
-        if (available_days == null || available_days.isEmpty()) {
-            return "Not available";
+    // Helper methods
+    public List<String> getAvailableDays() {
+        if (consultation_schedule == null || consultation_schedule.isEmpty()) {
+            return new ArrayList<>();
         }
-        return String.join(", ", available_days).toUpperCase();
+        return new ArrayList<>(consultation_schedule.keySet());
     }
 
-    // Check if lecturer has available hours
+    public List<String> getSlotsForDay(String dayOfWeek) {
+        if (consultation_schedule == null || !consultation_schedule.containsKey(dayOfWeek)) {
+            return new ArrayList<>();
+        }
+        return consultation_schedule.get(dayOfWeek);
+    }
+
+    public String getFormattedAvailableDays() {
+        if (consultation_schedule == null || consultation_schedule.isEmpty()) {
+            return "Not available";
+        }
+
+        StringBuilder formatted = new StringBuilder();
+        List<String> days = new ArrayList<>(consultation_schedule.keySet());
+
+        for (int i = 0; i < days.size(); i++) {
+            String day = days.get(i);
+            // Capitalize first 3 letters
+            formatted.append(day.substring(0, 1).toUpperCase())
+                    .append(day.substring(1, Math.min(3, day.length())));
+
+            if (i < days.size() - 1) {
+                formatted.append(", ");
+            }
+        }
+        return formatted.toString();
+    }
+
     public boolean hasAvailableHours() {
         return booked_hours < weekly_hours;
+    }
+
+    public int getAvailableHours() {
+        return Math.max(0, weekly_hours - booked_hours);
+    }
+
+    public String getAvailabilityStatus() {
+        if (!hasAvailableHours()) {
+            return "Fully Booked";
+        }
+        return getAvailableHours() + "/" + weekly_hours + " hours available";
+    }
+
+    public int getTotalSlotsCount() {
+        if (consultation_schedule == null) return 0;
+
+        int count = 0;
+        for (List<String> slots : consultation_schedule.values()) {
+            count += slots.size();
+        }
+        return count;
     }
 }

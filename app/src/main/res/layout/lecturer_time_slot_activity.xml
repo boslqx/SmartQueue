@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background"
+    android:paddingTop="?attr/actionBarSize">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/primary">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_back"
+            android:contentDescription="@string/back"
+            android:clickable="true"
+            android:focusable="true"
+            app:tint="@color/text_dark" />
+
+        <TextView
+            android:id="@+id/tvLecturerName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lecturer Consultation"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/tvDepartment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Department"
+            android:textSize="14sp"
+            android:textColor="@color/text_dark"
+            android:gravity="center"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/tvOfficeLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Office Location"
+            android:textSize="12sp"
+            android:textColor="@color/text_dark"
+            android:gravity="center"
+            android:layout_marginTop="2dp" />
+
+    </LinearLayout>
+
+    <!-- Selected Date Display -->
+    <TextView
+        android:id="@+id/tvSelectedDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Selected Date"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/primary"
+        android:gravity="center"
+        android:padding="12dp"
+        android:background="@color/accent_light" />
+
+    <!-- Date Selection Horizontal List -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:background="@color/background">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select Date"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"
+            android:layout_marginBottom="8dp"
+            android:paddingStart="16dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvDates"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <!-- Duration Indicator -->
+    <TextView
+        android:id="@+id/tvSelectedDuration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select 1 consultation slot (1 hour)"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/primary"
+        android:gravity="center"
+        android:padding="8dp"
+        android:background="@color/accent" />
+
+    <!-- Time Slots -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/background">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Available Consultation Slots"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_dark"
+            android:layout_marginBottom="12dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTimeSlots"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <!-- Confirm Button -->
+    <Button
+        android:id="@+id/btnConfirmBooking"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Confirm Consultation"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:background="@color/primary"
+        android:textColor="@color/text_dark"
+        android:layout_margin="16dp"
+        android:padding="12dp" />
+
+</LinearLayout>

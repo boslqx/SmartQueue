@@ -22,8 +22,10 @@ public class ConfirmBookingActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     private String serviceType, serviceName, locationId, date, startTime, endTime, extraInfo;
+    private String lecturerId, lecturerName, lecturerEmail; // For lecturer consultation
     private boolean isPaid;
     private double price;
+    private int duration;
 
     private TextView tvServiceName, tvLocation, tvDate, tvTimeSlot, tvDuration, tvTotalAmount;
     private Button btnConfirm, btnCancel;
@@ -65,20 +67,27 @@ public class ConfirmBookingActivity extends AppCompatActivity {
         date = intent.getStringExtra("date");
         startTime = intent.getStringExtra("startTime");
         endTime = intent.getStringExtra("endTime");
+        duration = intent.getIntExtra("duration", 1);
         isPaid = intent.getBooleanExtra("isPaid", false);
         price = intent.getDoubleExtra("price", 0.0);
 
+        // Lecturer-specific fields
+        lecturerId = intent.getStringExtra("lecturerId");
+        lecturerName = intent.getStringExtra("lecturerName");
+        lecturerEmail = intent.getStringExtra("lecturerEmail");
+
         Log.d(TAG, "Booking details - Service: " + serviceType + ", Location: " + locationId);
         Log.d(TAG, "Date: " + date + ", Time: " + startTime + " - " + endTime);
-        Log.d(TAG, "Paid: " + isPaid + ", Price: " + price);
+        if (lecturerId != null) {
+            Log.d(TAG, "Lecturer: " + lecturerName + " (" + lecturerId + ")");
+        }
     }
 
     private void setupUI() {
-        // Set service details
         tvServiceName.setText(serviceName);
         tvLocation.setText(locationId + (extraInfo != null ? " (" + extraInfo + ")" : ""));
 
-        // Format and set date
+        // Format date
         try {
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             SimpleDateFormat outputFormat = new SimpleDateFormat("EEE, MMM d, yyyy", Locale.getDefault());
@@ -88,31 +97,15 @@ public class ConfirmBookingActivity extends AppCompatActivity {
             tvDate.setText(date);
         }
 
-        // Set time slot
         tvTimeSlot.setText(startTime + " - " + endTime);
-
-        // Calculate and set duration
-        int duration = calculateDuration(startTime, endTime);
         tvDuration.setText(duration + " hour" + (duration > 1 ? "s" : ""));
 
-        // Set total amount
+        // Set amount
         if (isPaid) {
             double totalAmount = duration * price;
             tvTotalAmount.setText(String.format(Locale.getDefault(), "RM %.2f", totalAmount));
         } else {
             tvTotalAmount.setText("Free");
-        }
-    }
-
-    private int calculateDuration(String start, String end) {
-        try {
-            SimpleDateFormat format = new SimpleDateFormat("HH:mm", Locale.getDefault());
-            long startMillis = format.parse(start).getTime();
-            long endMillis = format.parse(end).getTime();
-            return (int) ((endMillis - startMillis) / (1000 * 60 * 60));
-        } catch (Exception e) {
-            Log.e(TAG, "Error calculating duration", e);
-            return 1; // Default to 1 hour if calculation fails
         }
     }
 
@@ -128,7 +121,6 @@ public class ConfirmBookingActivity extends AppCompatActivity {
             return;
         }
 
-        // Disable button to prevent double-clicking
         btnConfirm.setEnabled(false);
         btnConfirm.setText("Processing...");
 
@@ -136,7 +128,7 @@ public class ConfirmBookingActivity extends AppCompatActivity {
             // Redirect to PaymentActivity
             navigateToPayment();
         } else {
-            // Directly create booking for free services
+            // Directly create booking for free services (including lecturer consultation)
             createBookingInFirestore();
         }
     }
@@ -151,7 +143,7 @@ public class ConfirmBookingActivity extends AppCompatActivity {
         intent.putExtra("startTime", startTime);
         intent.putExtra("endTime", endTime);
         intent.putExtra("price", price);
-        intent.putExtra("duration", calculateDuration(startTime, endTime));
+        intent.putExtra("duration", duration);
         startActivity(intent);
         finish();
     }
@@ -165,26 +157,31 @@ public class ConfirmBookingActivity extends AppCompatActivity {
             userName = userEmail != null ? userEmail.split("@")[0] : "User";
         }
 
-        int duration = calculateDuration(startTime, endTime);
         double amount = isPaid ? duration * price : 0.0;
 
-        // Match your database schema exactly
         Map<String, Object> booking = new HashMap<>();
-        booking.put("service_type", serviceType);  // Changed to match schema
-        booking.put("service_name", serviceName);  // Changed to match schema
-        booking.put("location_id", locationId);    // Changed to match schema
-        booking.put("user_id", userId);            // Changed to match schema
-        booking.put("user_name", userName);        // Added
-        booking.put("user_email", userEmail);      // Added
+        booking.put("service_type", serviceType);
+        booking.put("service_name", serviceName);
+        booking.put("location_id", locationId);
+        booking.put("user_id", userId);
+        booking.put("user_name", userName);
+        booking.put("user_email", userEmail);
         booking.put("date", date);
-        booking.put("start_time", startTime);      // Changed to match schema
-        booking.put("end_time", endTime);          // Changed to match schema
+        booking.put("start_time", startTime);
+        booking.put("end_time", endTime);
         booking.put("duration", duration);
         booking.put("status", "confirmed");
-        booking.put("payment_status", isPaid ? "pending" : "free");  // Added
+        booking.put("payment_status", isPaid ? "pending" : "free");
         booking.put("amount", amount);
         booking.put("created_at", Timestamp.now());
         booking.put("updated_at", Timestamp.now());
+
+        // Add lecturer-specific fields if this is a lecturer consultation
+        if ("lecturer_consultation".equals(serviceType) && lecturerId != null) {
+            booking.put("lecturer_id", lecturerId);
+            booking.put("lecturer_name", lecturerName);
+            booking.put("lecturer_email", lecturerEmail);
+        }
 
         Log.d(TAG, "Creating booking with data: " + booking.toString());
 
@@ -192,7 +189,13 @@ public class ConfirmBookingActivity extends AppCompatActivity {
                 .add(booking)
                 .addOnSuccessListener(documentReference -> {
                     Log.d(TAG, "Booking created with ID: " + documentReference.getId());
-                    showSuccessAndNavigate(documentReference.getId());
+
+                    // If it's a lecturer consultation, update lecturer's booked hours
+                    if ("lecturer_consultation".equals(serviceType) && lecturerId != null) {
+                        updateLecturerBookedHours(lecturerId);
+                    } else {
+                        showSuccessAndNavigate();
+                    }
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error creating booking: " + e.getMessage(), e);
@@ -204,7 +207,21 @@ public class ConfirmBookingActivity extends AppCompatActivity {
                 });
     }
 
-    private void showSuccessAndNavigate(String bookingId) {
+    private void updateLecturerBookedHours(String lecturerId) {
+        db.collection("lecturers").document(lecturerId)
+                .update("booked_hours", com.google.firebase.firestore.FieldValue.increment(1))
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Lecturer booked hours updated");
+                    showSuccessAndNavigate();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error updating lecturer hours: " + e.getMessage());
+                    // Still show success since booking was created
+                    showSuccessAndNavigate();
+                });
+    }
+
+    private void showSuccessAndNavigate() {
         Toast.makeText(this, "Booking confirmed successfully!", Toast.LENGTH_LONG).show();
 
         // Navigate to booking status or back to dashboard

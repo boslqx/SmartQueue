@@ -30,6 +30,7 @@
         <activity android:name=".PaymentActivity" android:exported="false" />
         <activity android:name=".PaymentSuccessActivity" android:exported="false" />
         <activity android:name=".BookingDetailsActivity" android:exported="false" />
+        <activity android:name=".LecturerTimeSlotActivity" android:exported="false" />
 
         <!-- Main launcher activity -->
         <activity
