@@ -2,6 +2,7 @@ package com.example.smartqueue;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -11,7 +12,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class BookActivity extends AppCompatActivity {
 
-    private CardView btnDiscussionRoom, btnPoolTable, btnPingPong, btnCourt, btnMusicRoom, btnConsultation;
+    private static final String TAG = "BookActivity";
+    private CardView btnDiscussionRoom, btnPoolTable, btnPingPong, btnMusicRoom, btnConsultation;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
@@ -28,7 +30,6 @@ public class BookActivity extends AppCompatActivity {
         btnDiscussionRoom = findViewById(R.id.btnDiscussionRoom);
         btnPoolTable = findViewById(R.id.btnPoolTable);
         btnPingPong = findViewById(R.id.btnPingPong);
-        btnCourt = findViewById(R.id.btnCourt);
         btnMusicRoom = findViewById(R.id.btnMusicRoom);
         btnConsultation = findViewById(R.id.btnConsultation);
 
@@ -39,9 +40,8 @@ public class BookActivity extends AppCompatActivity {
         btnDiscussionRoom.setOnClickListener(v -> navigateToSlots("discussion_room"));
         btnPoolTable.setOnClickListener(v -> navigateToSlots("pool_table"));
         btnPingPong.setOnClickListener(v -> navigateToSlots("ping_pong"));
-        btnCourt.setOnClickListener(v -> navigateToSlots("court"));
         btnMusicRoom.setOnClickListener(v -> navigateToSlots("music_room"));
-        btnConsultation.setOnClickListener(v -> navigateToSlots("consultation"));
+        btnConsultation.setOnClickListener(v -> navigateToSlots("lecturer_consultation"));
 
         // Bottom navigation actions
         bottomNav.setOnItemSelectedListener(item -> {
@@ -66,6 +66,7 @@ public class BookActivity extends AppCompatActivity {
     }
 
     private void navigateToSlots(String serviceType) {
+        Log.d(TAG, "Navigating to SelectSlotActivity with serviceType: " + serviceType);
         Toast.makeText(this, "Selected: " + serviceType.replace("_", " "), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(BookActivity.this, SelectSlotActivity.class);
         intent.putExtra("serviceType", serviceType);

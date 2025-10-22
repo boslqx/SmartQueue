@@ -6,6 +6,8 @@
     <!-- Welcome Page -->
     <string name="register">Register</string>
     <string name="login">Login</string>
+    <string name="slogan">Book your space, skip the wait</string>
+    <string name="slogan2">New to campus? Start here!</string>
 
     <!-- Register -->
     <string name="full_name">Full name</string>
@@ -43,6 +45,7 @@
     <string name="welcome_back">Welcome Back!</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="sign_up_prompt">Don\'t have an account? Sign up</string>
+    <string name="create_account">Create Account</string>
 
     <!-- Recent Activity -->
     <string name="activity_title">Activity Title</string>
@@ -59,4 +62,141 @@
     <string name="consultation">Consultation</string>
     <string name="lecturer_consultation">Lecturer Consultation</string>
 
+    <!-- Error Messages -->
+    <string name="error_no_service_selected">Error: No service selected</string>
+    <string name="service_not_found">Service not found</string>
+    <string name="error_loading_service">Error loading service: %s</string>
+    <string name="error_loading_lecturers">Error loading lecturers: %s</string>
+    <string name="unknown_layout_type">Unknown layout type</string>
+    <string name="no_lecturers_available">No lecturers available</string>
+
+    <!-- Service Info Format -->
+    <string name="available_time_format">Available: %1$s - %2$s</string>
+    <string name="max_duration_hours">Max Duration: %d hours</string>
+    <string name="price_format">Price: RM %s</string>
+    <string name="price_free">Price: Free</string>
+
+    <!-- Single Layout Texts -->
+    <string name="music_room_available">Music Room Available</string>
+    <string name="court_available">Court Available</string>
+
+    <!-- Navigation -->
+    <string name="selected_location">Selected: %s</string>
+
+    <!-- Item Lecturer Strings -->
+    <string name="lecturer_icon">Lecturer icon</string>
+    <string name="lecturer_name_placeholder">Dr. Smith</string>
+    <string name="department_placeholder">Computer Science</string>
+    <string name="availability_placeholder">Available: Mon, Wed, Fri</string>
+    <string name="arrow_icon">Arrow</string>
+
+    <!-- Discussion Room  -->
+    <string name="select_discussion_room">Select a Discussion Room</string>
+    <string name="large_rooms_label">Large Rooms (6-8 People)</string>
+    <string name="room_l1">Room L1</string>
+    <string name="room_l2">Room L2</string>
+    <string name="small_rooms_label">Small Rooms (2-4 People)</string>
+    <string name="room_s1">Room S1</string>
+    <string name="room_s2">Room S2</string>
+    <string name="room_s3">Room S3</string>
+    <string name="large_room">Large Room</string>
+    <string name="small_room">Small Room</string>
+
+    <!-- Lecturer List  -->
+    <string name="select_lecturer">Select a Lecturer</string>
+
+    <!-- Ping Pong Table Strings -->
+    <string name="select_ping_pong_table">Select a Ping Pong Table</string>
+    <string name="ping_pong_table">Ping Pong Table</string>
+    <string name="table_1">Table 1</string>
+    <string name="table_2">Table 2</string>
+
+    <!-- Pool Table Strings -->
+    <string name="select_pool_table">Select a Pool Table</string>
+    <string name="pool_table_1">Pool Table 1</string>
+    <string name="pool_table_2">Pool Table 2</string>
+
+    <!-- Single Layout Strings -->
+    <string name="available">Available</string>
+    <string name="location_icon">Location Icon</string>
+    <string name="tap_for_time_slots">Tap to see available time slots</string>
+
+    <string name="time_range_placeholder">08:00 - 09:00</string>
+    <string name="status_available">Available</string>
+    <string name="status_booked">Booked</string>
+    <string name="status_selected">Selected</string>
+    <string name="select_time_slot">Select Time Slot</string>
+    <string name="select_date">Select Date</string>
+    <string name="available_time_slots">Available Time Slots</string>
+    <string name="confirm_booking">Confirm Booking</string>
+    <string name="please_select_time_slot">Please select a time slot</string>
+    <string name="location">Location</string>
+
+    <!-- Select Slot -->
+    <string name="back">Back</string>
+    <string name="select_location">Select Location</string>
+    <string name="available_time_range">Available: 08:00 - 21:00</string>
+    <string name="max_duration_hour">Max Duration: 1 hour</string>
+
+
+    <!-- Time Slot Selection -->
+    <string name="status_max_reached">Max reached</string>
+    <string name="consecutive_slots_required">Please select consecutive time slots</string>
+    <string name="slot_already_booked">This time slot is already booked</string>
+    <string name="max_hours_allowed">Maximum %d hour(s) allowed</string>
+    <string name="error_generating_slots">Error generating time slots</string>
+    <string name="error_loading_availability">Error loading availability</string>
+    <string name="select_consecutive">Select consecutive slots</string>
+
+    <!-- Confirm Booking -->
+    <string name="booking_summary">Booking Summary</string>
+    <string name="date">Date</string>
+    <string name="time_slot">Time Slot</string>
+    <string name="duration">Duration</string>
+    <string name="total_amount">Total Amount</string>
+    <string name="cancel">Cancel</string>
+    <string name="booking_confirmed">Booking Confirmed!</string>
+    <string name="booking_failed">Booking failed. Please try again.</string>
+    <string name="free">Free</string>
+
+    <!-- Payment Activity Strings -->
+    <string name="payment">Payment</string>
+    <string name="service_label">Service:</string>
+    <string name="location_label">Location:</string>
+    <string name="time_slot_label">Time Slot:</string>
+    <string name="total_amount_label">Total Amount:</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="touch_n_go">Touch \'n Go</string>
+    <string name="touch_n_go_ewallet">Touch \'n Go eWallet</string>
+    <string name="credit_card">Credit Card</string>
+    <string name="credit_debit_card">Credit / Debit Card</string>
+    <string name="pay_now">Pay Now</string>
+    <string name="payment_secure">🔒 Your payment is secure and encrypted</string>
+
+    <!-- Placeholder strings -->
+    <string name="car_wash">Car Wash</string>
+    <string name="main_branch">Main Branch</string>
+    <string name="time_slot_placeholder">10:00 - 11:00</string>
+    <string name="amount_placeholder">RM 25.00</string>
+
+    <!-- Content Descriptions -->
+    <string name="touch_n_go_icon">Touch \'n Go icon</string>
+    <string name="credit_card_icon">Credit card icon</string>
+
+    <!-- Payment Success Strings -->
+    <string name="success_icon">Success icon</string>
+    <string name="payment_successful">Payment Successful!</string>
+    <string name="booking_id_prefix">Booking ID:</string>
+    <string name="amount_prefix">Amount:</string>
+    <string name="done">Done</string>
+    <string name="redirecting_message">Redirecting in 5 seconds...</string>
+
+    <!-- Placeholder strings (will be replaced dynamically) -->
+    <string name="booking_id_placeholder">ABC12345</string>
+    <string name="amount_placeholder_success">RM 25.00</string>
+
+    <!-- Queue Status Strings -->
+    <string name="no_bookings_found">No bookings found</string>
+    <string name="error_loading_bookings">Error loading bookings: %s</string>
+    <string name="failed_to_load_bookings">Failed to load bookings</string>
 </resources>

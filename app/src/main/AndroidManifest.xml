@@ -13,24 +13,31 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartQueue">
 
-        <!-- 👇 Add all new activities here -->
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".RegisterStep1Activity" />
-        <activity android:name=".RegisterStep2Activity" />
-        <activity android:name=".RegisterStep3Activity" />
-        <activity android:name=".DashboardActivity" />
-        <activity android:name=".BookActivity" />
-        <activity android:name=".QueueStatusActivity" />
-        <activity android:name=".HistoryActivity" />
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".ResetPasswordActivity" />
+        <!-- Activities -->
+        <activity android:name=".LoginActivity" android:exported="false" />
+        <activity android:name=".RegisterStep1Activity" android:exported="false" />
+        <activity android:name=".RegisterStep2Activity" android:exported="false" />
+        <activity android:name=".RegisterStep3Activity" android:exported="false" />
+        <activity android:name=".DashboardActivity" android:exported="false" />
+        <activity android:name=".BookActivity" android:exported="false" />
+        <activity android:name=".SelectSlotActivity" android:exported="false" />
+        <activity android:name=".QueueStatusActivity" android:exported="false" />
+        <activity android:name=".HistoryActivity" android:exported="false" />
+        <activity android:name=".SettingsActivity" android:exported="false" />
+        <activity android:name=".ResetPasswordActivity" android:exported="false" />
+        <activity android:name=".ConfirmBookingActivity" android:exported="false" />
+        <activity android:name=".TimeSlotActivity" android:exported="false" />
+        <activity android:name=".PaymentActivity" android:exported="false" />
+        <activity android:name=".PaymentSuccessActivity" android:exported="false" />
+        <activity android:name=".BookingDetailsActivity" android:exported="false" />
+        <activity android:name=".LecturerTimeSlotActivity" android:exported="false" />
 
+        <!-- Main launcher activity -->
         <activity
             android:name=".WelcomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

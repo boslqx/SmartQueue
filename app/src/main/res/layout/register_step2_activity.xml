@@ -5,12 +5,14 @@
     android:orientation="vertical"
     android:gravity="center"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background">
 
     <TextView
         android:text="@string/email_verification"
         android:textSize="22sp"
         android:textStyle="bold"
+        android:textColor="@color/text_dark"
         android:layout_marginBottom="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -18,13 +20,18 @@
     <TextView
         android:id="@+id/tvInstruction"
         android:text="@string/verification_instruction"
-        android:layout_marginBottom="12dp"
+        android:textColor="@color/text_dark"
+        android:textSize="14sp"
+        android:textAlignment="center"
+        android:layout_marginBottom="24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/btnSendCode"
         android:text="@string/send_verification_code"
+        android:backgroundTint="@color/primary"
+        android:textColor="@color/text_dark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -33,6 +40,10 @@
         android:hint="@string/enter_verification_code"
         android:inputType="number"
         android:autofillHints="smsOTP"
+        android:padding="16dp"
+        android:textColor="@color/text_dark"
+        android:textColorHint="@color/text_dark"
+        android:background="@android:drawable/editbox_background"
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -40,6 +51,8 @@
     <Button
         android:id="@+id/btnVerify"
         android:text="@string/verify_continue"
+        android:backgroundTint="@color/accent"
+        android:textColor="@android:color/white"
         android:layout_marginTop="12dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
