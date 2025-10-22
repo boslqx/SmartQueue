@@ -199,4 +199,28 @@
     <string name="no_bookings_found">No bookings found</string>
     <string name="error_loading_bookings">Error loading bookings: %s</string>
     <string name="failed_to_load_bookings">Failed to load bookings</string>
+
+    <!-- Settings -->
+    <string name="account">Account</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="change_password">Change Password</string>
+    <string name="notifications">Notifications</string>
+    <string name="preferences">Preferences</string>
+    <string name="help_support">Help &amp; Support</string>
+    <string name="about">About</string>
+    <string name="logout">Logout</string>
+    <string name="version">Version %s</string>
+
+    <!-- Edit Profile -->
+    <string name="phone_number">Phone Number</string>
+    <string name="save_profile">Save Profile</string>
+
+    <!-- Change Password -->
+    <string name="current_password">Current Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
+
+    <!-- FAQ -->
+    <string name="faq">FAQ</string>
+    <string name="contact_support">Contact Support</string>
 </resources>
