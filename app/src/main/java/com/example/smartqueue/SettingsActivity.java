@@ -12,6 +12,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,6 +33,7 @@ public class SettingsActivity extends AppCompatActivity {
     private TextView tvUserName, tvUserEmail, tvAppVersion;
     private Button btnEditProfile, btnChangePassword, btnFAQ, btnContactSupport, btnLogout;
     private SwitchMaterial switchBookingReminders, switchQueueUpdates, switchSoundNotifications, switchDarkMode;
+    private BottomNavigationView bottomNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,7 @@ public class SettingsActivity extends AppCompatActivity {
         loadUserInfo();
         loadPreferences();
         setupClickListeners();
+        setupBottomNavigation();
     }
 
     private void initializeFirebase() {
@@ -76,6 +80,31 @@ public class SettingsActivity extends AppCompatActivity {
         // About
         tvAppVersion = findViewById(R.id.tvAppVersion);
         btnLogout = findViewById(R.id.btnLogout);
+
+        // Bottom Navigation
+        bottomNav = findViewById(R.id.bottomNav);
+    }
+
+    private void setupBottomNavigation() {
+        bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                startActivity(new Intent(this, DashboardActivity.class));
+                finish();
+                return true;
+            } else if (id == R.id.nav_book) {
+                startActivity(new Intent(this, BookActivity.class));
+                finish();
+                return true;
+            } else if (id == R.id.nav_settings) {
+                // Already here
+                return true;
+            }
+            return false;
+        });
+
+        // Set the current selected item
+        bottomNav.setSelectedItemId(R.id.nav_settings);
     }
 
     private void loadUserInfo() {
@@ -214,9 +243,6 @@ public class SettingsActivity extends AppCompatActivity {
         // Sign out from Firebase
         mAuth.signOut();
 
-        // Clear preferences (optional)
-        // prefs.edit().clear().apply();
-
         // Navigate to login screen
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -231,5 +257,9 @@ public class SettingsActivity extends AppCompatActivity {
         super.onResume();
         // Reload user info when returning from edit profile
         loadUserInfo();
+        // Ensure bottom navigation is properly selected
+        if (bottomNav != null) {
+            bottomNav.setSelectedItemId(R.id.nav_settings);
+        }
     }
 }
