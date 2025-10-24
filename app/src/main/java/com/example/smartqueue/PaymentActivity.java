@@ -16,7 +16,10 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -28,7 +31,7 @@ public class PaymentActivity extends AppCompatActivity {
     private TextView tvService, tvAmount, tvLocation, tvTimeSlot;
     private RadioGroup rgPaymentMethod;
     private Button btnPay;
-    private ImageView btnBack; // Added back button
+    private ImageView btnBack;
 
     private String serviceType, serviceName, locationId, locationName, startTime, endTime;
     private double price;
@@ -47,7 +50,7 @@ public class PaymentActivity extends AppCompatActivity {
         initializeViews();
         getIntentData();
         displayPaymentInfo();
-        setupBackButton(); // Setup back button
+        setupBackButton();
 
         btnPay.setOnClickListener(v -> processPayment());
 
@@ -64,23 +67,20 @@ public class PaymentActivity extends AppCompatActivity {
         tvTimeSlot = findViewById(R.id.tvTimeSlot);
         rgPaymentMethod = findViewById(R.id.rgPaymentMethod);
         btnPay = findViewById(R.id.btnPay);
-        btnBack = findViewById(R.id.btnBack); // Initialize back button
+        btnBack = findViewById(R.id.btnBack);
 
         // Initially disable pay button until method selected
         btnPay.setEnabled(false);
         btnPay.setAlpha(0.6f);
     }
 
-    // Added back button functionality
     private void setupBackButton() {
         btnBack.setOnClickListener(v -> onBackPressed());
     }
 
     @Override
     public void onBackPressed() {
-        // Optional: Show confirmation if payment is in progress
         if (!btnPay.isEnabled() || btnPay.getText().toString().equals("Processing...")) {
-            // Payment is being processed, ask for confirmation
             showBackConfirmationDialog();
         } else {
             navigateBack();
@@ -98,7 +98,6 @@ public class PaymentActivity extends AppCompatActivity {
 
     private void navigateBack() {
         super.onBackPressed();
-        // Add smooth transition
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
@@ -177,36 +176,42 @@ public class PaymentActivity extends AppCompatActivity {
         String paymentId = UUID.randomUUID().toString();
         String bookingId = UUID.randomUUID().toString();
 
-        // First, save payment record - Match your Firestore field names
+        // Generate date string from startTime if needed
+        String dateString = generateDateString();
+
+        // ===== FIXED: All fields now use snake_case consistently =====
+
+        // First, save payment record
         Map<String, Object> payment = new HashMap<>();
-        payment.put("paymentId", paymentId);
-        payment.put("userId", userId); // Changed from user_id to userId
+        payment.put("payment_id", paymentId);
+        payment.put("user_id", userId);
         payment.put("amount", price);
-        payment.put("paymentMethod", paymentMethod);
+        payment.put("payment_method", paymentMethod);
         payment.put("status", "completed");
         payment.put("timestamp", Timestamp.now());
-        payment.put("serviceType", serviceType);
+        payment.put("service_type", serviceType);
 
-        // Then save booking with payment reference - Match your Firestore field names
+        // Then save booking with payment reference - ALL snake_case
         Map<String, Object> booking = new HashMap<>();
-        booking.put("bookingId", bookingId);
-        booking.put("user_id", userId); // Match your existing field name
-        booking.put("user_email", userEmail); // Add email
-        booking.put("user_name", userName); // Add name
-        booking.put("paymentId", paymentId);
-        booking.put("serviceType", serviceType);
-        booking.put("serviceName", serviceName);
-        booking.put("locationId", locationId);
-        booking.put("locationName", locationName);
-        booking.put("startTime", startTime);
-        booking.put("endTime", endTime);
+        booking.put("booking_id", bookingId);
+        booking.put("user_id", userId);
+        booking.put("user_email", userEmail);
+        booking.put("user_name", userName);
+        booking.put("payment_id", paymentId);
+        booking.put("service_type", serviceType);
+        booking.put("service_name", serviceName);
+        booking.put("location_id", locationId);
+        booking.put("location_name", locationName);
+        booking.put("start_time", startTime);  // Changed from startTime to start_time
+        booking.put("end_time", endTime);      // Changed from endTime to end_time
+        booking.put("date", dateString);       // Added date field
+        booking.put("duration", 1);            // Added duration field (calculate if needed)
         booking.put("timestamp", Timestamp.now());
-        booking.put("created_at", Timestamp.now()); // Match your existing field
-        booking.put("updated_at", Timestamp.now()); // Match your existing field
+        booking.put("created_at", Timestamp.now());
+        booking.put("updated_at", Timestamp.now());
         booking.put("status", "confirmed");
-        booking.put("price", price);
-        booking.put("amount", price); // Match your existing field name
-        booking.put("payment_status", "paid"); // Match your existing field name
+        booking.put("amount", price);
+        booking.put("payment_status", "paid");
 
         // Save payment first, then booking
         db.collection("payments").document(paymentId).set(payment)
@@ -238,5 +243,21 @@ public class PaymentActivity extends AppCompatActivity {
                         btnPay.setText(R.string.pay_now);
                     });
                 });
+    }
+
+    /**
+     * Generate date string in yyyy-MM-dd format
+     * This should ideally come from the booking selection screen
+     */
+    private String generateDateString() {
+        // If you pass date from previous activity, use that
+        String dateFromIntent = getIntent().getStringExtra("date");
+        if (dateFromIntent != null && !dateFromIntent.isEmpty()) {
+            return dateFromIntent;
+        }
+
+        // Otherwise use current date as fallback
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        return sdf.format(Calendar.getInstance().getTime());
     }
 }
