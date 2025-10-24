@@ -240,4 +240,15 @@
     <!-- FAQ -->
     <string name="faq">FAQ</string>
     <string name="contact_support">Contact Support</string>
+
+    <!-- Reset Password -->
+    <string name="reset_password">Reset Password</string>
+    <string name="send_reset_link">Send Reset Link</string>
+    <string name="enter_email_to_reset">Enter your email to reset password</string>
+    <string name="reset_instructions">We\'ll send you a link to reset your password</string>
+    <string name="enter_email_error">Enter your email</string>
+    <string name="valid_email_error">Enter a valid email address</string>
+    <string name="sending">Sending...</string>
+    <string name="reset_email_sent">Password reset email sent! Check your inbox.</string>
+    <string name="reset_email_failed">Failed to send reset email: </string>
 </resources>
