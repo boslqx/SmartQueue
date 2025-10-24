@@ -133,13 +133,13 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void setupClickListeners() {
         btnQuickBook.setOnClickListener(v ->
-                startActivity(new Intent(this, BookActivity.class)));
+                startActivity(new Intent(this, SettingsActivity.class)));
 
         btnMyQueues.setOnClickListener(v ->
                 startActivity(new Intent(this, QueueStatusActivity.class)));
 
         btnSettings.setOnClickListener(v ->
-                startActivity(new Intent(this, SettingsActivity.class)));
+                startActivity(new Intent(this, BookActivity.class)));
 
         tvSeeAll.setOnClickListener(v ->
                 startActivity(new Intent(this, QueueStatusActivity.class)));

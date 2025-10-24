@@ -8,6 +8,7 @@
     <string name="login">Login</string>
     <string name="slogan">Book your space, skip the wait</string>
     <string name="slogan2">New to campus? Start here!</string>
+    <string name="app_logo">SmartQueue Logo</string>
 
     <!-- Register -->
     <string name="full_name">Full name</string>
