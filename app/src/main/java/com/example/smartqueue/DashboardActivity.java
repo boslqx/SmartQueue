@@ -194,10 +194,10 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void loadAnnouncements() {
+        // FIXED: Simplified query - removed double orderBy to avoid index requirement
         db.collection("announcements")
                 .whereEqualTo("active", true)
                 .orderBy("priority", Query.Direction.DESCENDING)
-                .orderBy("created_at", Query.Direction.DESCENDING)
                 .limit(5)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -206,6 +206,10 @@ public class DashboardActivity extends AppCompatActivity {
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         AnnouncementModel announcement = document.toObject(AnnouncementModel.class);
                         announcement.setId(document.getId());
+
+                        // Debug log to check data
+                        Log.d(TAG, "Loaded announcement: " + announcement.getTitle() + " - " + announcement.getMessage());
+
                         announcementList.add(announcement);
                     }
 
@@ -216,13 +220,20 @@ public class DashboardActivity extends AppCompatActivity {
                         defaultAnnouncement.setMessage("Book your facilities easily and skip the wait.");
                         defaultAnnouncement.setType("info");
                         announcementList.add(defaultAnnouncement);
+                        Log.d(TAG, "No announcements found, showing default");
                     }
 
                     announcementAdapter.notifyDataSetChanged();
-                    startAutoScroll();
+
+                    // Only start auto-scroll if there are multiple announcements
+                    if (announcementList.size() > 1) {
+                        startAutoScroll();
+                    }
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error loading announcements: " + e.getMessage());
+                    e.printStackTrace(); // Print full stack trace for debugging
+
                     // Add default announcement on error
                     AnnouncementModel defaultAnnouncement = new AnnouncementModel();
                     defaultAnnouncement.setTitle("Welcome!");

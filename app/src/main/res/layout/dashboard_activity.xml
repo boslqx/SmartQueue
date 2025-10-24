@@ -68,24 +68,27 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="20dp">
 
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/vpAnnouncements"
                     android:layout_width="match_parent"
-                    android:layout_height="120dp" />
+                    android:layout_height="140dp"
+                    android:clipToPadding="false"
+                    android:clipChildren="false" />
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabIndicator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="12dp"
                     app:tabBackground="@drawable/table_selector"
                     app:tabGravity="center"
                     app:tabIndicatorHeight="0dp"
                     app:tabPaddingStart="4dp"
-                    app:tabPaddingEnd="4dp" />
+                    app:tabPaddingEnd="4dp"
+                    app:tabMinWidth="8dp" />
             </LinearLayout>
 
             <!-- Quick Actions -->
