@@ -40,6 +40,22 @@
     <string name="book">Book</string>
     <string name="settings">Settings</string>
     <string name="home_title">Home</string>
+    <string name="welcome_default">Welcome to SmartQueue!</string>
+    <string name="welcome_user">Welcome back, %s!</string>
+    <string name="loading_queues">Loading your queues…</string>
+    <string name="loading_announcements">Loading announcements…</string>
+    <string name="live_queues">Live Queues</string>
+    <string name="see_all">See All</string>
+    <string name="recently">Recently</string>
+    <string name="position_format">Position: %s</string>
+    <string name="active_queues_format">%s Active Queue</string>
+    <string name="active_queues_plural_format">%s Active Queues</string>
+    <string name="announcement_format">%s: %s</string>
+    <string name="active_bookings">0 active bookings</string>
+    <string name="upcoming_bookings">0 upcoming</string>
+    <string name="gear_emoji">⚙️</string>
+    <string name="clipboard_emoji">📋</string>
+    <string name="calendar_emoji">📅</string>
 
     <!-- Login -->
     <string name="welcome_back">Welcome Back!</string>
