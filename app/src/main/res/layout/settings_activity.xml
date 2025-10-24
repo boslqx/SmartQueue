@@ -28,16 +28,6 @@
                 android:padding="16dp"
                 android:gravity="center_vertical">
 
-                <ImageView
-                    android:id="@+id/btnBack"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/ic_back"
-                    android:contentDescription="@string/back"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:tint="@color/text_dark" />
-
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
