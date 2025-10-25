@@ -26,7 +26,7 @@ public class SelectSlotActivity extends AppCompatActivity {
     private String serviceType;
     private ServiceModel serviceModel;
 
-    private TextView tvServiceName, tvAvailableTime, tvMaxDuration, tvPrice;
+    private TextView tvServiceName, tvAvailableTime, tvMaxDuration, tvPrice, tvServiceDescription;
     private FrameLayout layoutContainer;
     private View priceContainer;
 
@@ -38,7 +38,6 @@ public class SelectSlotActivity extends AppCompatActivity {
             setContentView(R.layout.select_slot_activity);
             Log.d(TAG, "Layout inflated successfully");
 
-            // Check if user is authenticated
             if (com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser() == null) {
                 Toast.makeText(this, "Please login first", Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "User not authenticated");
@@ -46,10 +45,7 @@ public class SelectSlotActivity extends AppCompatActivity {
                 return;
             }
 
-            // Initialize Firestore
             db = FirebaseFirestore.getInstance();
-
-            // Get service type from intent
             serviceType = getIntent().getStringExtra("serviceType");
             Log.d(TAG, "Service Type: " + serviceType);
 
@@ -59,11 +55,11 @@ public class SelectSlotActivity extends AppCompatActivity {
                 return;
             }
 
-            // Initialize views
             tvServiceName = findViewById(R.id.tvServiceName);
             tvAvailableTime = findViewById(R.id.tvAvailableTime);
             tvMaxDuration = findViewById(R.id.tvMaxDuration);
             tvPrice = findViewById(R.id.tvPrice);
+            tvServiceDescription = findViewById(R.id.tvServiceDescription);
             priceContainer = findViewById(R.id.priceContainer);
             layoutContainer = findViewById(R.id.layoutContainer);
             ImageView btnBack = findViewById(R.id.btnBack);
@@ -72,7 +68,6 @@ public class SelectSlotActivity extends AppCompatActivity {
                 btnBack.setOnClickListener(v -> finish());
             }
 
-            // Load service data from Firestore
             loadServiceData();
 
         } catch (Exception e) {
@@ -89,19 +84,12 @@ public class SelectSlotActivity extends AppCompatActivity {
                 .document(serviceType)
                 .get()
                 .addOnSuccessListener(document -> {
-                    Log.d(TAG, "Document exists: " + document.exists());
-
-                    if (document.exists()) {
-                        Log.d(TAG, "Document data: " + document.getData());
-                        Log.d(TAG, "Layout type from document: " + document.getString("layout_type"));
-                    }
-
                     if (document.exists()) {
                         serviceModel = document.toObject(ServiceModel.class);
                         if (serviceModel != null) {
                             Log.d(TAG, "Service Model loaded: " + serviceModel.getName());
-                            Log.d(TAG, "Layout type from model: " + serviceModel.getLayout_type());
                             displayServiceInfo();
+                            displayServiceDescription();
                             renderLayout();
                         } else {
                             Log.e(TAG, "Service Model is null");
@@ -147,6 +135,30 @@ public class SelectSlotActivity extends AppCompatActivity {
         }
     }
 
+    private void displayServiceDescription() {
+        String description;
+        switch (serviceType) {
+            case "discussion_room":
+                description = getString(R.string.discussion_room_description);
+                break;
+            case "pool_table":
+                description = getString(R.string.pool_table_description);
+                break;
+            case "ping_pong":
+                description = getString(R.string.ping_pong_description);
+                break;
+            case "music_room":
+                description = getString(R.string.music_room_description);
+                break;
+            case "lecturer_consultation":
+                description = getString(R.string.lecturer_consultation_description);
+                break;
+            default:
+                description = getString(R.string.general_booking_rules);
+        }
+        tvServiceDescription.setText(description);
+    }
+
     private void renderLayout() {
         try {
             String layoutType = serviceModel.getLayout_type();
@@ -190,9 +202,6 @@ public class SelectSlotActivity extends AppCompatActivity {
             layoutContainer.removeAllViews();
             layoutContainer.addView(layout);
 
-            Log.d(TAG, "Finding room views...");
-
-            // Setup room click listeners
             CardView roomLarge1 = layout.findViewById(R.id.roomLarge1);
             CardView roomLarge2 = layout.findViewById(R.id.roomLarge2);
             CardView roomSmall1 = layout.findViewById(R.id.roomSmall1);
@@ -273,14 +282,12 @@ public class SelectSlotActivity extends AppCompatActivity {
             ImageView ivSingleIcon = layout.findViewById(R.id.ivSingleIcon);
             CardView singleLocation = layout.findViewById(R.id.singleLocation);
 
-            // Set appropriate icon and text based on service type
             if (serviceType.equals("music_room")) {
                 ivSingleIcon.setImageResource(R.drawable.ic_musicroom);
                 tvSingleName.setText("Music Room");
                 tvSingleTitle.setText("Music Room Available");
                 Log.d(TAG, "Loaded Music Room layout");
             } else {
-                // Fallback for any other single layout service
                 tvSingleName.setText(serviceModel.getName());
                 tvSingleTitle.setText(serviceModel.getName() + " Available");
                 Log.d(TAG, "Loaded generic single layout for: " + serviceType);
@@ -306,7 +313,6 @@ public class SelectSlotActivity extends AppCompatActivity {
             RecyclerView rvLecturers = layout.findViewById(R.id.rvLecturers);
             rvLecturers.setLayoutManager(new LinearLayoutManager(this));
 
-            // Load lecturers from Firestore
             loadLecturers(rvLecturers);
 
             Log.d(TAG, "Lecturer list layout inflated successfully");
@@ -348,14 +354,11 @@ public class SelectSlotActivity extends AppCompatActivity {
     private void navigateToTimeSlots(String locationId, String extraInfo) {
         Log.d(TAG, "Navigation to time slots: " + locationId);
 
-        // Check if this is a lecturer consultation
         if ("lecturer_consultation".equals(serviceType)) {
-            // Use the new LecturerTimeSlotActivity for lecturers
             Intent intent = new Intent(SelectSlotActivity.this, LecturerTimeSlotActivity.class);
-            intent.putExtra("lecturerId", extraInfo); // extraInfo contains the auto-generated lecturer ID
+            intent.putExtra("lecturerId", extraInfo);
             startActivity(intent);
         } else {
-            // Use existing TimeSlotActivity for other services
             Intent intent = new Intent(SelectSlotActivity.this, TimeSlotActivity.class);
             intent.putExtra("serviceType", serviceType);
             intent.putExtra("serviceName", serviceModel.getName());

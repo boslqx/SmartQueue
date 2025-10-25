@@ -251,4 +251,63 @@
     <string name="sending">Sending...</string>
     <string name="reset_email_sent">Password reset email sent! Check your inbox.</string>
     <string name="reset_email_failed">Failed to send reset email: </string>
+
+
+    <string name="rulesandregulation">📋 Rules and Regulations </string>
+
+    <!-- Service Descriptions -->
+    <string name="discussion_room_description">
+        📝 Perfect for group study sessions and project discussions\n\n
+        • Large rooms: Up to 10 people\n
+        • Small rooms: Up to 4 people\n
+        • Equipped with whiteboard and projector\n
+        • Max 1 hour per booking\n
+        • Free for students\n\n
+        Please keep the room clean and return all materials.
+    </string>
+
+    <string name="pool_table_description">
+        🎱 Enjoy a game of pool with friends\n\n
+        • 2 tables available\n
+        • Max 1 hour per booking\n
+        • Cues and balls provided\n
+        • Cost: RM5 per hour\n\n
+        Please handle equipment with care and report any damage.
+    </string>
+
+    <string name="ping_pong_description">
+        🏓 Table tennis for recreation and competition\n\n
+        • 2 tables available\n
+        • Max 1 hour per booking\n
+        • Paddles and balls provided\n
+        • Free for students\n\n
+        Clean the table after use. No food or drinks near tables.
+    </string>
+
+    <string name="music_room_description">
+        🎵 Practice your musical talents\n\n
+        • Soundproof room\n
+        • Piano, guitar, and drum set available\n
+        • Max 3 consecutive hours\n
+        • Free for students\n\n
+        Respect equipment and noise levels. Book responsibly.
+    </string>
+
+    <string name="lecturer_consultation_description">
+        👨‍🏫 Schedule one-on-one consultation with lecturers\n\n
+        • 1 hour consultation slots\n
+        • Every lecturer has each own different consultation hour\n
+        • Free for students\n\n
+        Please arrive on time. Cancel at least 2 hours in advance if you cannot attend.
+    </string>
+
+    <!-- Rules and Guidelines -->
+    <string name="general_booking_rules">
+        📋 General Booking Rules:\n\n
+        • Book up to 7 days in advance\n
+        • Maximum 1 active booking per service\n
+        • Cancel at least 2 hours before your slot\n
+        • Repeated no-shows may result in suspension\n\n
+        Thank you for using SmartQueue responsibly!
+    </string>
 </resources>

@@ -41,105 +41,156 @@
             android:layout_height="32dp" />
     </LinearLayout>
 
-    <!-- Service Info Card -->
-    <androidx.cardview.widget.CardView
+    <!-- SINGLE SCROLLVIEW FOR EVERYTHING -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="4dp"
-        app:cardBackgroundColor="@color/primary">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
-            <!-- Available Time Row -->
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <!-- Service Info Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:layout_margin="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/primary">
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_time"
-                    android:contentDescription="Time"
-                    app:tint="@color/text_dark" />
-
-                <TextView
-                    android:id="@+id/tvAvailableTime"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Available: 08:00 - 21:00"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_dark"
-                    android:layout_marginStart="8dp" />
-            </LinearLayout>
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-            <!-- Max Duration Row -->
-            <LinearLayout
-                android:layout_width="wrap_content"
+                    <!-- Available Time Row -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_time"
+                            android:contentDescription="Time"
+                            app:tint="@color/text_dark" />
+
+                        <TextView
+                            android:id="@+id/tvAvailableTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Available: 08:00 - 21:00"
+                            android:textSize="14sp"
+                            android:textColor="@color/text_dark"
+                            android:layout_marginStart="8dp" />
+                    </LinearLayout>
+
+                    <!-- Max Duration Row -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="8dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_duration"
+                            android:contentDescription="Duration"
+                            app:tint="@color/text_dark" />
+
+                        <TextView
+                            android:id="@+id/tvMaxDuration"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Max Duration: 1 hour"
+                            android:textSize="14sp"
+                            android:textColor="@color/text_dark"
+                            android:layout_marginStart="8dp" />
+                    </LinearLayout>
+
+                    <!-- Price Row -->
+                    <LinearLayout
+                        android:id="@+id/priceContainer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="8dp"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_money"
+                            android:contentDescription="Price"
+                            app:tint="@color/text_dark" />
+
+                        <TextView
+                            android:id="@+id/tvPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Price: Free"
+                            android:textSize="14sp"
+                            android:textColor="@color/text_dark"
+                            android:layout_marginStart="8dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Service Description Card - Reduced margin -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginTop="8dp">
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@android:color/white">
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_duration"
-                    android:contentDescription="Duration"
-                    app:tint="@color/text_dark" />
-
-                <TextView
-                    android:id="@+id/tvMaxDuration"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Max Duration: 1 hour"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_dark"
-                    android:layout_marginStart="8dp" />
-            </LinearLayout>
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-            <!-- Price Row -->
-            <LinearLayout
-                android:id="@+id/priceContainer"
-                android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="About This Service"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_dark"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvServiceDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Service description will be loaded here"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_dark"
+                        android:lineSpacingExtra="4dp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Dynamic Layout Container - NO SCROLLVIEW INSIDE -->
+            <FrameLayout
+                android:id="@+id/layoutContainer"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginTop="8dp"
-                android:visibility="gone">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_money"
-                    android:contentDescription="Price"
-                    app:tint="@color/text_dark" />
-
-                <TextView
-                    android:id="@+id/tvPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Price: Free"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_dark"
-                    android:layout_marginStart="8dp" />
-            </LinearLayout>
+                android:paddingBottom="16dp" />
 
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <!-- Dynamic Layout Container -->
-    <FrameLayout
-        android:id="@+id/layoutContainer"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+    </ScrollView>
 
 </LinearLayout>
