@@ -22,7 +22,7 @@ public class ConfirmBookingActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     private String serviceType, serviceName, locationId, date, startTime, endTime, extraInfo;
-    private String lecturerId, lecturerName, lecturerEmail; // For lecturer consultation
+    private String lecturerId, lecturerName, lecturerEmail;
     private boolean isPaid;
     private double price;
     private int duration;
@@ -71,7 +71,6 @@ public class ConfirmBookingActivity extends AppCompatActivity {
         isPaid = intent.getBooleanExtra("isPaid", false);
         price = intent.getDoubleExtra("price", 0.0);
 
-        // Lecturer-specific fields
         lecturerId = intent.getStringExtra("lecturerId");
         lecturerName = intent.getStringExtra("lecturerName");
         lecturerEmail = intent.getStringExtra("lecturerEmail");
@@ -87,7 +86,6 @@ public class ConfirmBookingActivity extends AppCompatActivity {
         tvServiceName.setText(serviceName);
         tvLocation.setText(locationId + (extraInfo != null ? " (" + extraInfo + ")" : ""));
 
-        // Format date
         try {
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             SimpleDateFormat outputFormat = new SimpleDateFormat("EEE, MMM d, yyyy", Locale.getDefault());
@@ -100,7 +98,6 @@ public class ConfirmBookingActivity extends AppCompatActivity {
         tvTimeSlot.setText(startTime + " - " + endTime);
         tvDuration.setText(duration + " hour" + (duration > 1 ? "s" : ""));
 
-        // Set amount
         if (isPaid) {
             double totalAmount = duration * price;
             tvTotalAmount.setText(String.format(Locale.getDefault(), "RM %.2f", totalAmount));
@@ -125,10 +122,8 @@ public class ConfirmBookingActivity extends AppCompatActivity {
         btnConfirm.setText("Processing...");
 
         if (isPaid) {
-            // Redirect to PaymentActivity
             navigateToPayment();
         } else {
-            // Directly create booking for free services (including lecturer consultation)
             createBookingInFirestore();
         }
     }
@@ -176,7 +171,6 @@ public class ConfirmBookingActivity extends AppCompatActivity {
         booking.put("created_at", Timestamp.now());
         booking.put("updated_at", Timestamp.now());
 
-        // Add lecturer-specific fields if this is a lecturer consultation
         if ("lecturer_consultation".equals(serviceType) && lecturerId != null) {
             booking.put("lecturer_id", lecturerId);
             booking.put("lecturer_name", lecturerName);
@@ -185,12 +179,41 @@ public class ConfirmBookingActivity extends AppCompatActivity {
 
         Log.d(TAG, "Creating booking with data: " + booking.toString());
 
+        // *** FIXED: Create final variables BEFORE the lambda ***
+        final String finalUserEmail = userEmail;
+        final String finalUserName = userName;
+        final String finalServiceName = serviceName;
+        final String finalLocationId = locationId;
+        final String finalDate = date;
+        final String finalStartTime = startTime;
+        final String finalEndTime = endTime;
+        final int finalDuration = duration;
+        final double finalAmount = amount;
+        final String finalPaymentStatus = isPaid ? "pending" : "free";
+
         db.collection("bookings")
                 .add(booking)
                 .addOnSuccessListener(documentReference -> {
                     Log.d(TAG, "Booking created with ID: " + documentReference.getId());
 
-                    // If it's a lecturer consultation, update lecturer's booked hours
+                    // *** Send confirmation email ***
+                    BookingModel bookingModel = new BookingModel();
+                    bookingModel.setUserEmail(finalUserEmail);
+                    bookingModel.setUserName(finalUserName);
+                    bookingModel.setServiceName(finalServiceName);
+                    bookingModel.setLocationId(finalLocationId);
+                    bookingModel.setDate(finalDate);
+                    bookingModel.setStartTime(finalStartTime);
+                    bookingModel.setEndTime(finalEndTime);
+                    bookingModel.setDuration(finalDuration);
+                    bookingModel.setAmount(finalAmount);
+                    bookingModel.setPaymentStatus(finalPaymentStatus);
+                    bookingModel.setStatus("confirmed");
+
+                    // Send email in background
+                    EmailSender.sendBookingConfirmation(bookingModel, documentReference.getId());
+                    // *** END EMAIL CODE ***
+
                     if ("lecturer_consultation".equals(serviceType) && lecturerId != null) {
                         updateLecturerBookedHours(lecturerId);
                     } else {
@@ -200,8 +223,6 @@ public class ConfirmBookingActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error creating booking: " + e.getMessage(), e);
                     Toast.makeText(this, "Booking failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
-
-                    // Re-enable button
                     btnConfirm.setEnabled(true);
                     btnConfirm.setText("Confirm Booking");
                 });
@@ -216,7 +237,6 @@ public class ConfirmBookingActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error updating lecturer hours: " + e.getMessage());
-                    // Still show success since booking was created
                     showSuccessAndNavigate();
                 });
     }
@@ -224,7 +244,6 @@ public class ConfirmBookingActivity extends AppCompatActivity {
     private void showSuccessAndNavigate() {
         Toast.makeText(this, "Booking confirmed successfully!", Toast.LENGTH_LONG).show();
 
-        // Navigate to booking status or back to dashboard
         Intent intent = new Intent(ConfirmBookingActivity.this, DashboardActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
