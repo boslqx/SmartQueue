@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp"
     android:orientation="vertical"
     android:gravity="center"
@@ -8,8 +8,17 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
+    <!-- Success Icon -->
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_email"
+        android:contentDescription="Email Icon"
+        android:layout_marginBottom="24dp"
+        app:tint="@color/primary" />
+
     <TextView
-        android:text="@string/email_verification"
+        android:text="@string/verify_your_email"
         android:textSize="22sp"
         android:textStyle="bold"
         android:textColor="@color/text_dark"
@@ -18,43 +27,92 @@
         android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/tvInstruction"
-        android:text="@string/verification_instruction"
+        android:id="@+id/tvEmailSent"
+        android:text="We've sent a verification link to:"
         android:textColor="@color/text_dark"
         android:textSize="14sp"
+        android:textAlignment="center"
+        android:layout_marginBottom="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tvUserEmail"
+        android:text="user@example.com"
+        android:textColor="@color/primary"
+        android:textSize="16sp"
+        android:textStyle="bold"
         android:textAlignment="center"
         android:layout_marginBottom="24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <!-- Info Card -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="@color/accent_light">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="📧 Check Your Email"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_dark"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Open your email inbox\n2. Click the verification link\n3. Return here after verification"
+                android:textSize="14sp"
+                android:textColor="@color/text_dark"
+                android:lineSpacingExtra="4dp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Resend Button -->
     <Button
-        android:id="@+id/btnSendCode"
-        android:text="@string/send_verification_code"
-        android:backgroundTint="@color/primary"
-        android:textColor="@color/text_dark"
+        android:id="@+id/btnResendEmail"
+        android:text="@string/resend_verification_email"
+        android:textSize="14sp"
+        android:backgroundTint="@android:color/transparent"
+        android:textColor="@color/primary"
+        android:layout_marginBottom="12dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        style="?attr/borderlessButtonStyle" />
 
-    <EditText
-        android:id="@+id/etCode"
-        android:hint="@string/enter_verification_code"
-        android:inputType="number"
-        android:autofillHints="smsOTP"
-        android:padding="16dp"
-        android:textColor="@color/text_dark"
-        android:textColorHint="@color/text_dark"
-        android:background="@android:drawable/editbox_background"
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
+    <!-- Verify Button -->
     <Button
         android:id="@+id/btnVerify"
-        android:text="@string/verify_continue"
+        android:text="@string/i_verified_continue"
         android:backgroundTint="@color/accent"
         android:textColor="@android:color/white"
-        android:layout_marginTop="12dp"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:padding="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <!-- Help Text -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Didn't receive the email? Check your spam folder"
+        android:textSize="12sp"
+        android:textColor="@color/text_dark"
+        android:layout_marginTop="16dp"
+        android:textAlignment="center" />
 
 </LinearLayout>

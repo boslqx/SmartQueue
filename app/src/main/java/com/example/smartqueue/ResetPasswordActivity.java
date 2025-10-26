@@ -2,10 +2,9 @@ package com.example.smartqueue;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -13,8 +12,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class ResetPasswordActivity extends AppCompatActivity {
 
     private EditText etEmail;
-    private Button btnResetPassword;
-    private ImageView btnBack;
+    private Button btnSendResetLink, btnBackToLogin;
     private FirebaseAuth mAuth;
 
     @Override
@@ -24,67 +22,66 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        initializeViews();
-        setupClickListeners();
-    }
-
-    private void initializeViews() {
-        btnBack = findViewById(R.id.btnBack);
         etEmail = findViewById(R.id.etEmail);
-        btnResetPassword = findViewById(R.id.btnResetPassword);
+        btnSendResetLink = findViewById(R.id.btnSendResetLink);
+        btnBackToLogin = findViewById(R.id.btnBackToLogin);
+
+        btnSendResetLink.setOnClickListener(v -> sendPasswordResetEmail());
+        btnBackToLogin.setOnClickListener(v -> {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        });
     }
 
-    private void setupClickListeners() {
-        btnBack.setOnClickListener(v -> finish());
-
-        btnResetPassword.setOnClickListener(v -> resetPassword());
-    }
-
-    private void resetPassword() {
+    private void sendPasswordResetEmail() {
         String email = etEmail.getText().toString().trim();
 
-        if (email.isEmpty()) {
-            etEmail.setError(getString(R.string.enter_email_error));
+        // Validation
+        if (TextUtils.isEmpty(email)) {
+            etEmail.setError("Email is required");
             etEmail.requestFocus();
             return;
         }
 
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            etEmail.setError(getString(R.string.valid_email_error));
+            etEmail.setError("Please enter a valid email");
             etEmail.requestFocus();
             return;
         }
 
-        btnResetPassword.setEnabled(false);
-        btnResetPassword.setText(getString(R.string.sending));
+        // Disable button and show loading state
+        btnSendResetLink.setEnabled(false);
+        btnSendResetLink.setText("Sending...");
 
         // Send password reset email
         mAuth.sendPasswordResetEmail(email)
                 .addOnCompleteListener(task -> {
-                    btnResetPassword.setEnabled(true);
-                    btnResetPassword.setText(getString(R.string.send_reset_link));
+                    btnSendResetLink.setEnabled(true);
+                    btnSendResetLink.setText(R.string.send_reset_link);
 
                     if (task.isSuccessful()) {
-                        Toast.makeText(ResetPasswordActivity.this,
-                                getString(R.string.reset_email_sent),
-                                Toast.LENGTH_LONG).show();
-
-                        // Navigate back to login after successful email send
-                        new Handler().postDelayed(() -> {
-                            Intent intent = new Intent(ResetPasswordActivity.this, LoginActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                            finish();
-                        }, 2000);
+                        // Show success dialog
+                        showSuccessDialog(email);
                     } else {
-                        String errorMessage = getString(R.string.reset_email_failed);
-                        if (task.getException() != null) {
-                            errorMessage += task.getException().getMessage();
-                        }
-                        Toast.makeText(ResetPasswordActivity.this,
-                                errorMessage,
-                                Toast.LENGTH_LONG).show();
+                        // Show error message
+                        String errorMsg = task.getException() != null ?
+                                task.getException().getMessage() : "Failed to send reset email";
+                        Toast.makeText(this, "Error: " + errorMsg, Toast.LENGTH_LONG).show();
                     }
                 });
+    }
+
+    private void showSuccessDialog(String email) {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Reset Link Sent! ✅")
+                .setMessage("We've sent a password reset link to:\n\n" + email +
+                        "\n\nPlease check your inbox (and spam folder) and click the link to reset your password.")
+                .setPositiveButton("OK", (dialog, which) -> {
+                    // Return to login screen
+                    startActivity(new Intent(this, LoginActivity.class));
+                    finish();
+                })
+                .setCancelable(false)
+                .show();
     }
 }
