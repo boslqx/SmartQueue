@@ -7,15 +7,12 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,7 +30,7 @@ import java.util.Locale;
 public class DashboardActivity extends AppCompatActivity {
 
     private static final String TAG = "DashboardActivity";
-    private static final long AUTO_SCROLL_DELAY = 5000;
+    private static final long AUTO_SCROLL_DELAY = 5000; // 5 seconds
 
     private TextView tvWelcomeUser, tvActiveBookings, tvUpcomingBookings, tvSeeAll;
     private TextView tvTotalBookingsCount, tvThisWeekCount;
@@ -66,7 +63,7 @@ public class DashboardActivity extends AppCompatActivity {
         setupClickListeners();
 
         loadUserData();
-        loadAnnouncements();
+        loadAnnouncements(); // This should work now
         loadUserBookings();
         loadBookingStats();
     }
@@ -89,14 +86,18 @@ public class DashboardActivity extends AppCompatActivity {
         announcementAdapter = new AnnouncementAdapter(announcementList);
         vpAnnouncements.setAdapter(announcementAdapter);
 
-        new TabLayoutMediator(tabIndicator, vpAnnouncements, (tab, position) -> {
-        }).attach();
+        // Connect TabLayout with ViewPager2
+        new TabLayoutMediator(tabIndicator, vpAnnouncements,
+                (tab, position) -> {
+                    // Empty - just creates indicator dots
+                }).attach();
 
+        // Setup auto-scroll
         autoScrollHandler = new Handler(Looper.getMainLooper());
         autoScrollRunnable = new Runnable() {
             @Override
             public void run() {
-                if (announcementList.size() > 1) {
+                if (announcementList != null && announcementList.size() > 1) {
                     int currentItem = vpAnnouncements.getCurrentItem();
                     int nextItem = (currentItem + 1) % announcementList.size();
                     vpAnnouncements.setCurrentItem(nextItem, true);
@@ -107,12 +108,17 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void startAutoScroll() {
-        stopAutoScroll();
-        autoScrollHandler.postDelayed(autoScrollRunnable, AUTO_SCROLL_DELAY);
+        stopAutoScroll(); // Stop any existing scroll
+        if (announcementList != null && announcementList.size() > 1) {
+            autoScrollHandler.postDelayed(autoScrollRunnable, AUTO_SCROLL_DELAY);
+            Log.d(TAG, "Auto-scroll started for " + announcementList.size() + " announcements");
+        }
     }
 
     private void stopAutoScroll() {
-        autoScrollHandler.removeCallbacks(autoScrollRunnable);
+        if (autoScrollHandler != null && autoScrollRunnable != null) {
+            autoScrollHandler.removeCallbacks(autoScrollRunnable);
+        }
     }
 
     private void setupRecyclerView() {
@@ -180,6 +186,8 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void loadAnnouncements() {
+        Log.d(TAG, "Starting to load announcements...");
+
         db.collection("announcements")
                 .whereEqualTo("active", true)
                 .orderBy("priority", Query.Direction.DESCENDING)
@@ -187,15 +195,21 @@ public class DashboardActivity extends AppCompatActivity {
                 .limit(5)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
+                    Log.d(TAG, "Announcements query successful. Documents found: " + queryDocumentSnapshots.size());
+
                     announcementList.clear();
 
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         AnnouncementModel announcement = document.toObject(AnnouncementModel.class);
                         announcement.setId(document.getId());
+
+                        Log.d(TAG, "Loaded announcement: " + announcement.getTitle() + " - " + announcement.getMessage());
                         announcementList.add(announcement);
                     }
 
+                    // If no announcements, add default one
                     if (announcementList.isEmpty()) {
+                        Log.d(TAG, "No announcements found, adding default");
                         AnnouncementModel defaultAnnouncement = new AnnouncementModel();
                         defaultAnnouncement.setTitle("Welcome to SmartQueue!");
                         defaultAnnouncement.setMessage("Book your facilities easily and skip the wait.");
@@ -203,17 +217,28 @@ public class DashboardActivity extends AppCompatActivity {
                         announcementList.add(defaultAnnouncement);
                     }
 
+                    Log.d(TAG, "Total announcements to display: " + announcementList.size());
+
+                    // Notify adapter and start auto-scroll
                     announcementAdapter.notifyDataSetChanged();
                     startAutoScroll();
+
+                    Log.d(TAG, "Announcements loaded successfully");
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error loading announcements: " + e.getMessage());
+                    Log.e(TAG, "Error loading announcements: " + e.getMessage(), e);
+
+                    // Add default announcement on error
+                    announcementList.clear();
                     AnnouncementModel defaultAnnouncement = new AnnouncementModel();
                     defaultAnnouncement.setTitle("Welcome!");
                     defaultAnnouncement.setMessage("Start booking your facilities today.");
                     defaultAnnouncement.setType("info");
                     announcementList.add(defaultAnnouncement);
+
                     announcementAdapter.notifyDataSetChanged();
+
+                    Log.d(TAG, "Added default announcement due to error");
                 });
     }
 
@@ -331,6 +356,7 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume called");
         loadUserData();
         loadUserBookings();
         loadBookingStats();
@@ -340,12 +366,14 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d(TAG, "onPause called");
         stopAutoScroll();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.d(TAG, "onDestroy called");
         stopAutoScroll();
     }
 }
