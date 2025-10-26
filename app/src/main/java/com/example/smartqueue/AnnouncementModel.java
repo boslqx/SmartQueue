@@ -48,17 +48,18 @@ public class AnnouncementModel {
 
         switch (type.toLowerCase()) {
             case "warning":
-                return 0xFFFFBDBD; // Light red/pink
+                return 0xFFFFE0B2; // Light orange/amber
             case "success":
                 return 0xFFC8E6C9; // Light green
             case "event":
                 return 0xFFBBDEFB; // Light blue
             case "info":
             default:
-                return 0xFFBADFDB; // Primary mint/teal
+                return 0xFFB3E5FC; // Light cyan
         }
     }
 
+    // Fixed emoji rendering
     public String getIcon() {
         if (type == null) return "ℹ️";
 

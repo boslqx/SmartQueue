@@ -3,7 +3,6 @@ package com.example.smartqueue;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
@@ -16,7 +15,10 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -28,9 +30,10 @@ public class PaymentActivity extends AppCompatActivity {
     private TextView tvService, tvAmount, tvLocation, tvTimeSlot;
     private RadioGroup rgPaymentMethod;
     private Button btnPay;
-    private ImageView btnBack; // Added back button
+    private ImageView btnBack;
 
-    private String serviceType, serviceName, locationId, locationName, startTime, endTime;
+    private String serviceType, serviceName, locationId, locationName, date, startTime, endTime;
+    private int duration;
     private double price;
 
     @Override
@@ -38,7 +41,6 @@ public class PaymentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.payment_activity);
 
-        // Set status bar color
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.primary));
 
         db = FirebaseFirestore.getInstance();
@@ -47,11 +49,10 @@ public class PaymentActivity extends AppCompatActivity {
         initializeViews();
         getIntentData();
         displayPaymentInfo();
-        setupBackButton(); // Setup back button
+        setupBackButton();
 
         btnPay.setOnClickListener(v -> processPayment());
 
-        // Set up radio button change listener for better UX
         rgPaymentMethod.setOnCheckedChangeListener((group, checkedId) -> {
             updatePayButtonState();
         });
@@ -64,23 +65,19 @@ public class PaymentActivity extends AppCompatActivity {
         tvTimeSlot = findViewById(R.id.tvTimeSlot);
         rgPaymentMethod = findViewById(R.id.rgPaymentMethod);
         btnPay = findViewById(R.id.btnPay);
-        btnBack = findViewById(R.id.btnBack); // Initialize back button
+        btnBack = findViewById(R.id.btnBack);
 
-        // Initially disable pay button until method selected
         btnPay.setEnabled(false);
         btnPay.setAlpha(0.6f);
     }
 
-    // Added back button functionality
     private void setupBackButton() {
         btnBack.setOnClickListener(v -> onBackPressed());
     }
 
     @Override
     public void onBackPressed() {
-        // Optional: Show confirmation if payment is in progress
         if (!btnPay.isEnabled() || btnPay.getText().toString().equals("Processing...")) {
-            // Payment is being processed, ask for confirmation
             showBackConfirmationDialog();
         } else {
             navigateBack();
@@ -98,7 +95,6 @@ public class PaymentActivity extends AppCompatActivity {
 
     private void navigateBack() {
         super.onBackPressed();
-        // Add smooth transition
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
@@ -107,8 +103,10 @@ public class PaymentActivity extends AppCompatActivity {
         serviceName = getIntent().getStringExtra("serviceName");
         locationId = getIntent().getStringExtra("locationId");
         locationName = getIntent().getStringExtra("locationName");
+        date = getIntent().getStringExtra("date");
         startTime = getIntent().getStringExtra("startTime");
         endTime = getIntent().getStringExtra("endTime");
+        duration = getIntent().getIntExtra("duration", 1);
         price = getIntent().getDoubleExtra("price", 0.0);
     }
 
@@ -118,6 +116,8 @@ public class PaymentActivity extends AppCompatActivity {
 
         if (locationName != null) {
             tvLocation.setText(locationName);
+        } else if (locationId != null) {
+            tvLocation.setText(locationId);
         }
 
         if (startTime != null && endTime != null) {
@@ -142,19 +142,15 @@ public class PaymentActivity extends AppCompatActivity {
 
         String method = selectedId == R.id.rbTng ? "Touch 'n Go" : "Credit/Debit Card";
 
-        // Show processing state
         btnPay.setEnabled(false);
         btnPay.setText("Processing...");
 
-        // Simulate payment process with delay
         simulatePaymentProcessing(method);
     }
 
     private void simulatePaymentProcessing(String paymentMethod) {
-        // Simulate API call delay
         new Handler().postDelayed(() -> {
-            // Simulate payment success (in real app, handle success/failure from gateway)
-            boolean paymentSuccess = true; // Always success for simulation
+            boolean paymentSuccess = true;
 
             if (paymentSuccess) {
                 savePaymentAndBooking(paymentMethod);
@@ -165,7 +161,7 @@ public class PaymentActivity extends AppCompatActivity {
                     btnPay.setText(R.string.pay_now);
                 });
             }
-        }, 2000); // 2 second delay
+        }, 2000);
     }
 
     private void savePaymentAndBooking(String paymentMethod) {
@@ -177,44 +173,75 @@ public class PaymentActivity extends AppCompatActivity {
         String paymentId = UUID.randomUUID().toString();
         String bookingId = UUID.randomUUID().toString();
 
-        // First, save payment record - Match your Firestore field names
+        // Ensure we have a date
+        String dateString = (date != null && !date.isEmpty()) ? date : generateDateString();
+
+        // *** Create final variables for lambda ***
+        final String finalUserEmail = userEmail;
+        final String finalUserName = userName;
+        final String finalServiceName = serviceName;
+        final String finalLocationId = locationId;
+        final String finalDate = dateString;
+        final String finalStartTime = startTime;
+        final String finalEndTime = endTime;
+        final int finalDuration = duration;
+        final double finalPrice = price;
+
+        // Save payment record
         Map<String, Object> payment = new HashMap<>();
-        payment.put("paymentId", paymentId);
-        payment.put("userId", userId); // Changed from user_id to userId
+        payment.put("payment_id", paymentId);
+        payment.put("user_id", userId);
         payment.put("amount", price);
-        payment.put("paymentMethod", paymentMethod);
+        payment.put("payment_method", paymentMethod);
         payment.put("status", "completed");
         payment.put("timestamp", Timestamp.now());
-        payment.put("serviceType", serviceType);
+        payment.put("service_type", serviceType);
 
-        // Then save booking with payment reference - Match your Firestore field names
+        // Save booking with ALL snake_case fields
         Map<String, Object> booking = new HashMap<>();
-        booking.put("bookingId", bookingId);
-        booking.put("user_id", userId); // Match your existing field name
-        booking.put("user_email", userEmail); // Add email
-        booking.put("user_name", userName); // Add name
-        booking.put("paymentId", paymentId);
-        booking.put("serviceType", serviceType);
-        booking.put("serviceName", serviceName);
-        booking.put("locationId", locationId);
-        booking.put("locationName", locationName);
-        booking.put("startTime", startTime);
-        booking.put("endTime", endTime);
+        booking.put("booking_id", bookingId);
+        booking.put("user_id", userId);
+        booking.put("user_email", userEmail);
+        booking.put("user_name", userName);
+        booking.put("payment_id", paymentId);
+        booking.put("service_type", serviceType);
+        booking.put("service_name", serviceName);
+        booking.put("location_id", locationId);
+        booking.put("location_name", locationName);
+        booking.put("start_time", startTime);
+        booking.put("end_time", endTime);
+        booking.put("date", dateString);
+        booking.put("duration", duration);
         booking.put("timestamp", Timestamp.now());
-        booking.put("created_at", Timestamp.now()); // Match your existing field
-        booking.put("updated_at", Timestamp.now()); // Match your existing field
+        booking.put("created_at", Timestamp.now());
+        booking.put("updated_at", Timestamp.now());
         booking.put("status", "confirmed");
-        booking.put("price", price);
-        booking.put("amount", price); // Match your existing field name
-        booking.put("payment_status", "paid"); // Match your existing field name
+        booking.put("amount", price);
+        booking.put("payment_status", "paid");
 
-        // Save payment first, then booking
         db.collection("payments").document(paymentId).set(payment)
                 .addOnSuccessListener(aVoid -> {
-                    // Payment saved successfully, now save booking
                     db.collection("bookings").document(bookingId).set(booking)
                             .addOnSuccessListener(aVoid1 -> {
                                 runOnUiThread(() -> {
+                                    // *** Send confirmation email ***
+                                    BookingModel bookingModel = new BookingModel();
+                                    bookingModel.setUserEmail(finalUserEmail);
+                                    bookingModel.setUserName(finalUserName);
+                                    bookingModel.setServiceName(finalServiceName);
+                                    bookingModel.setLocationId(finalLocationId);
+                                    bookingModel.setDate(finalDate);
+                                    bookingModel.setStartTime(finalStartTime);
+                                    bookingModel.setEndTime(finalEndTime);
+                                    bookingModel.setDuration(finalDuration);
+                                    bookingModel.setAmount(finalPrice);
+                                    bookingModel.setPaymentStatus("paid");
+                                    bookingModel.setStatus("confirmed");
+
+                                    // Send email in background
+                                    EmailSender.sendBookingConfirmation(bookingModel, bookingId);
+                                    // *** END EMAIL CODE ***
+
                                     Toast.makeText(PaymentActivity.this, "Payment Successful!", Toast.LENGTH_LONG).show();
                                     Intent success = new Intent(PaymentActivity.this, PaymentSuccessActivity.class);
                                     success.putExtra("bookingId", bookingId);
@@ -238,5 +265,10 @@ public class PaymentActivity extends AppCompatActivity {
                         btnPay.setText(R.string.pay_now);
                     });
                 });
+    }
+
+    private String generateDateString() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        return sdf.format(Calendar.getInstance().getTime());
     }
 }

@@ -1,6 +1,10 @@
 package com.example.smartqueue;
 
 import com.google.firebase.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class BookingModel {
     private String documentId;
@@ -11,8 +15,8 @@ public class BookingModel {
     private String serviceName;
     private String locationId;
     private String date;
-    private String startTime; // Changed from start_time to match Java naming
-    private String endTime;   // Changed from end_time to match Java naming
+    private String startTime;
+    private String endTime;
     private int duration;
     private double amount;
     private String paymentStatus;
@@ -20,7 +24,6 @@ public class BookingModel {
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
-    // Empty constructor required for Firestore
     public BookingModel() {
     }
 
@@ -48,133 +51,53 @@ public class BookingModel {
     }
 
     // Getters and Setters
-    public String getDocumentId() {
-        return documentId;
-    }
+    public String getDocumentId() { return documentId; }
+    public void setDocumentId(String documentId) { this.documentId = documentId; }
 
-    public void setDocumentId(String documentId) {
-        this.documentId = documentId;
-    }
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
 
-    public String getUserId() {
-        return userId;
-    }
+    public String getUserEmail() { return userEmail; }
+    public void setUserEmail(String userEmail) { this.userEmail = userEmail; }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+    public String getUserName() { return userName; }
+    public void setUserName(String userName) { this.userName = userName; }
 
-    public String getUserEmail() {
-        return userEmail;
-    }
+    public String getServiceType() { return serviceType; }
+    public void setServiceType(String serviceType) { this.serviceType = serviceType; }
 
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
+    public String getServiceName() { return serviceName; }
+    public void setServiceName(String serviceName) { this.serviceName = serviceName; }
 
-    public String getUserName() {
-        return userName;
-    }
+    public String getLocationId() { return locationId; }
+    public void setLocationId(String locationId) { this.locationId = locationId; }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+    public String getDate() { return date; }
+    public void setDate(String date) { this.date = date; }
 
-    public String getServiceType() {
-        return serviceType;
-    }
+    public String getStartTime() { return startTime; }
+    public void setStartTime(String startTime) { this.startTime = startTime; }
 
-    public void setServiceType(String serviceType) {
-        this.serviceType = serviceType;
-    }
+    public String getEndTime() { return endTime; }
+    public void setEndTime(String endTime) { this.endTime = endTime; }
 
-    public String getServiceName() {
-        return serviceName;
-    }
+    public int getDuration() { return duration; }
+    public void setDuration(int duration) { this.duration = duration; }
 
-    public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
-    }
+    public double getAmount() { return amount; }
+    public void setAmount(double amount) { this.amount = amount; }
 
-    public String getLocationId() {
-        return locationId;
-    }
+    public String getPaymentStatus() { return paymentStatus; }
+    public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
 
-    public void setLocationId(String locationId) {
-        this.locationId = locationId;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public String getDate() {
-        return date;
-    }
+    public Timestamp getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public String getPaymentStatus() {
-        return paymentStatus;
-    }
-
-    public void setPaymentStatus(String paymentStatus) {
-        this.paymentStatus = paymentStatus;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Timestamp getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Timestamp updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+    public Timestamp getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(Timestamp updatedAt) { this.updatedAt = updatedAt; }
 
     // Helper methods
     public boolean isPaid() {
@@ -186,7 +109,7 @@ public class BookingModel {
     }
 
     public boolean canCancel() {
-        return "confirmed".equalsIgnoreCase(status);
+        return "confirmed".equalsIgnoreCase(status) && !isExpired();
     }
 
     public String getTimeSlot() {
@@ -201,17 +124,42 @@ public class BookingModel {
         }
     }
 
+    // NEW: Check if booking is expired
+    public boolean isExpired() {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+            String dateTimeString = date + " " + endTime;
+            Date bookingEndDateTime = dateFormat.parse(dateTimeString);
+            Date now = new Date();
+            return now.after(bookingEndDateTime);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    // NEW: Get computed status (expired takes precedence)
+    public String getComputedStatus() {
+        if (isExpired() && "confirmed".equalsIgnoreCase(status)) {
+            return "expired";
+        }
+        return status;
+    }
+
     public String getStatusDisplay() {
-        if (status == null) return "Unknown";
-        switch (status.toLowerCase()) {
+        String computedStatus = getComputedStatus();
+        if (computedStatus == null) return "Unknown";
+
+        switch (computedStatus.toLowerCase()) {
             case "confirmed":
                 return "Confirmed";
             case "completed":
                 return "Completed";
             case "cancelled":
                 return "Cancelled";
+            case "expired":
+                return "Expired";
             default:
-                return status;
+                return computedStatus;
         }
     }
 }

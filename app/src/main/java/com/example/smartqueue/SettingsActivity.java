@@ -29,7 +29,7 @@ public class SettingsActivity extends AppCompatActivity {
     private SharedPreferences prefs;
 
     // Views
-    private ImageView btnBack, ivProfilePicture;
+    private ImageView ivProfilePicture; // Removed btnBack
     private TextView tvUserName, tvUserEmail, tvAppVersion;
     private Button btnEditProfile, btnChangePassword, btnFAQ, btnContactSupport, btnLogout;
     private SwitchMaterial switchBookingReminders, switchQueueUpdates, switchSoundNotifications, switchDarkMode;
@@ -55,8 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        // Top bar
-        btnBack = findViewById(R.id.btnBack);
+        // Removed btnBack initialization
 
         // Profile section
         ivProfilePicture = findViewById(R.id.ivProfilePicture);
@@ -161,7 +160,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void setupClickListeners() {
-        btnBack.setOnClickListener(v -> finish());
+        // Removed btnBack click listener
 
         btnEditProfile.setOnClickListener(v -> {
             Intent intent = new Intent(this, EditProfileActivity.class);

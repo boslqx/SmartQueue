@@ -11,9 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 
 public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingViewHolder> {
 
@@ -41,15 +39,21 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
         holder.tvDate.setText(booking.getDate());
         holder.tvTimeSlot.setText(booking.getTimeSlot());
 
-        // Set status with appropriate color
-        holder.tvStatus.setText(booking.getStatus().toUpperCase());
+        // Get computed status (handles expiry)
+        String displayStatus = booking.getComputedStatus();
+        holder.tvStatus.setText(displayStatus.toUpperCase());
+
+        // Set status color based on computed status
         int statusColor;
-        switch (booking.getStatus().toLowerCase()) {
+        switch (displayStatus.toLowerCase()) {
             case "confirmed":
                 statusColor = context.getResources().getColor(R.color.available_color);
                 break;
             case "cancelled":
                 statusColor = context.getResources().getColor(R.color.booked_color);
+                break;
+            case "expired":
+                statusColor = context.getResources().getColor(R.color.gray_light);
                 break;
             case "completed":
                 statusColor = context.getResources().getColor(R.color.gray_light);
@@ -78,7 +82,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
         });
 
         // Highlight card based on status
-        if ("cancelled".equalsIgnoreCase(booking.getStatus())) {
+        if ("cancelled".equalsIgnoreCase(displayStatus) || "expired".equalsIgnoreCase(displayStatus)) {
             holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.gray_light));
             holder.cardView.setAlpha(0.7f);
         } else {

@@ -7,15 +7,12 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,6 +22,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -34,7 +33,7 @@ public class DashboardActivity extends AppCompatActivity {
     private static final long AUTO_SCROLL_DELAY = 5000; // 5 seconds
 
     private TextView tvWelcomeUser, tvActiveBookings, tvUpcomingBookings, tvSeeAll;
-    private MaterialCardView btnQuickBook, btnMyQueues, btnSettings;
+    private TextView tvTotalBookingsCount, tvThisWeekCount;
     private ViewPager2 vpAnnouncements;
     private TabLayout tabIndicator;
     private RecyclerView recyclerRecent;
@@ -64,7 +63,7 @@ public class DashboardActivity extends AppCompatActivity {
         setupClickListeners();
 
         loadUserData();
-        loadAnnouncements();
+        loadAnnouncements(); // This should work now
         loadUserBookings();
         loadBookingStats();
     }
@@ -74,14 +73,11 @@ public class DashboardActivity extends AppCompatActivity {
         tvActiveBookings = findViewById(R.id.tvActiveBookings);
         tvUpcomingBookings = findViewById(R.id.tvUpcomingBookings);
         tvSeeAll = findViewById(R.id.tvSeeAll);
+        tvTotalBookingsCount = findViewById(R.id.tvTotalBookingsCount);
+        tvThisWeekCount = findViewById(R.id.tvThisWeekCount);
 
         vpAnnouncements = findViewById(R.id.vpAnnouncements);
         tabIndicator = findViewById(R.id.tabIndicator);
-
-        btnQuickBook = findViewById(R.id.btnQuickBook);
-        btnMyQueues = findViewById(R.id.btnMyQueues);
-        btnSettings = findViewById(R.id.btnSettings);
-
         recyclerRecent = findViewById(R.id.recyclerRecent);
     }
 
@@ -91,16 +87,17 @@ public class DashboardActivity extends AppCompatActivity {
         vpAnnouncements.setAdapter(announcementAdapter);
 
         // Connect TabLayout with ViewPager2
-        new TabLayoutMediator(tabIndicator, vpAnnouncements, (tab, position) -> {
-            // Just dots, no text
-        }).attach();
+        new TabLayoutMediator(tabIndicator, vpAnnouncements,
+                (tab, position) -> {
+                    // Empty - just creates indicator dots
+                }).attach();
 
-        // Auto-scroll setup
+        // Setup auto-scroll
         autoScrollHandler = new Handler(Looper.getMainLooper());
         autoScrollRunnable = new Runnable() {
             @Override
             public void run() {
-                if (announcementList.size() > 1) {
+                if (announcementList != null && announcementList.size() > 1) {
                     int currentItem = vpAnnouncements.getCurrentItem();
                     int nextItem = (currentItem + 1) % announcementList.size();
                     vpAnnouncements.setCurrentItem(nextItem, true);
@@ -111,17 +108,22 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void startAutoScroll() {
-        autoScrollHandler.postDelayed(autoScrollRunnable, AUTO_SCROLL_DELAY);
+        stopAutoScroll(); // Stop any existing scroll
+        if (announcementList != null && announcementList.size() > 1) {
+            autoScrollHandler.postDelayed(autoScrollRunnable, AUTO_SCROLL_DELAY);
+            Log.d(TAG, "Auto-scroll started for " + announcementList.size() + " announcements");
+        }
     }
 
     private void stopAutoScroll() {
-        autoScrollHandler.removeCallbacks(autoScrollRunnable);
+        if (autoScrollHandler != null && autoScrollRunnable != null) {
+            autoScrollHandler.removeCallbacks(autoScrollRunnable);
+        }
     }
 
     private void setupRecyclerView() {
         recentBookings = new ArrayList<>();
         recentAdapter = new RecentAdapter(recentBookings, booking -> {
-            // Navigate to booking details
             Intent intent = new Intent(this, BookingDetailsActivity.class);
             intent.putExtra("bookingId", booking.getDocumentId());
             startActivity(intent);
@@ -132,15 +134,6 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void setupClickListeners() {
-        btnQuickBook.setOnClickListener(v ->
-                startActivity(new Intent(this, BookActivity.class)));
-
-        btnMyQueues.setOnClickListener(v ->
-                startActivity(new Intent(this, QueueStatusActivity.class)));
-
-        btnSettings.setOnClickListener(v ->
-                startActivity(new Intent(this, SettingsActivity.class)));
-
         tvSeeAll.setOnClickListener(v ->
                 startActivity(new Intent(this, QueueStatusActivity.class)));
 
@@ -177,7 +170,6 @@ public class DashboardActivity extends AppCompatActivity {
                     if (document.exists()) {
                         String name = document.getString("name");
                         if (name != null && !name.isEmpty()) {
-                            // Get first name only
                             String firstName = name.split(" ")[0];
                             tvWelcomeUser.setText("Welcome back, " + firstName + "!");
                         } else {
@@ -194,6 +186,8 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void loadAnnouncements() {
+        Log.d(TAG, "Starting to load announcements...");
+
         db.collection("announcements")
                 .whereEqualTo("active", true)
                 .orderBy("priority", Query.Direction.DESCENDING)
@@ -201,16 +195,21 @@ public class DashboardActivity extends AppCompatActivity {
                 .limit(5)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
+                    Log.d(TAG, "Announcements query successful. Documents found: " + queryDocumentSnapshots.size());
+
                     announcementList.clear();
 
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         AnnouncementModel announcement = document.toObject(AnnouncementModel.class);
                         announcement.setId(document.getId());
+
+                        Log.d(TAG, "Loaded announcement: " + announcement.getTitle() + " - " + announcement.getMessage());
                         announcementList.add(announcement);
                     }
 
+                    // If no announcements, add default one
                     if (announcementList.isEmpty()) {
-                        // Add default announcement
+                        Log.d(TAG, "No announcements found, adding default");
                         AnnouncementModel defaultAnnouncement = new AnnouncementModel();
                         defaultAnnouncement.setTitle("Welcome to SmartQueue!");
                         defaultAnnouncement.setMessage("Book your facilities easily and skip the wait.");
@@ -218,18 +217,28 @@ public class DashboardActivity extends AppCompatActivity {
                         announcementList.add(defaultAnnouncement);
                     }
 
+                    Log.d(TAG, "Total announcements to display: " + announcementList.size());
+
+                    // Notify adapter and start auto-scroll
                     announcementAdapter.notifyDataSetChanged();
                     startAutoScroll();
+
+                    Log.d(TAG, "Announcements loaded successfully");
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error loading announcements: " + e.getMessage());
+                    Log.e(TAG, "Error loading announcements: " + e.getMessage(), e);
+
                     // Add default announcement on error
+                    announcementList.clear();
                     AnnouncementModel defaultAnnouncement = new AnnouncementModel();
                     defaultAnnouncement.setTitle("Welcome!");
                     defaultAnnouncement.setMessage("Start booking your facilities today.");
                     defaultAnnouncement.setType("info");
                     announcementList.add(defaultAnnouncement);
+
                     announcementAdapter.notifyDataSetChanged();
+
+                    Log.d(TAG, "Added default announcement due to error");
                 });
     }
 
@@ -286,14 +295,23 @@ public class DashboardActivity extends AppCompatActivity {
         if (mAuth.getCurrentUser() == null) {
             tvActiveBookings.setText("0 active");
             tvUpcomingBookings.setText("0 upcoming");
+            tvTotalBookingsCount.setText("0");
+            tvThisWeekCount.setText("0");
             return;
         }
 
         String userId = mAuth.getCurrentUser().getUid();
-
-        // Get current date
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        String today = dateFormat.format(new java.util.Date());
+        String today = dateFormat.format(new Date());
+
+        // Total bookings
+        db.collection("bookings")
+                .whereEqualTo("user_id", userId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    int count = queryDocumentSnapshots.size();
+                    tvTotalBookingsCount.setText(String.valueOf(count));
+                });
 
         // Count active bookings (confirmed status)
         db.collection("bookings")
@@ -315,11 +333,30 @@ public class DashboardActivity extends AppCompatActivity {
                     int count = queryDocumentSnapshots.size();
                     tvUpcomingBookings.setText(count + (count == 1 ? " upcoming" : " upcoming"));
                 });
+
+        // This week bookings
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+        String weekStart = dateFormat.format(calendar.getTime());
+
+        calendar.add(Calendar.DAY_OF_WEEK, 7);
+        String weekEnd = dateFormat.format(calendar.getTime());
+
+        db.collection("bookings")
+                .whereEqualTo("user_id", userId)
+                .whereGreaterThanOrEqualTo("date", weekStart)
+                .whereLessThan("date", weekEnd)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    int count = queryDocumentSnapshots.size();
+                    tvThisWeekCount.setText(String.valueOf(count));
+                });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume called");
         loadUserData();
         loadUserBookings();
         loadBookingStats();
@@ -329,12 +366,14 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d(TAG, "onPause called");
         stopAutoScroll();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.d(TAG, "onDestroy called");
         stopAutoScroll();
     }
 }

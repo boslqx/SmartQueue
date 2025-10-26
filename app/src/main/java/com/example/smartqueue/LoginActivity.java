@@ -45,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         tvForgotPassword.setOnClickListener(v -> {
             Intent i = new Intent(LoginActivity.this, ResetPasswordActivity.class);
             startActivity(i);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         });
     }
 

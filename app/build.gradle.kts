@@ -26,14 +26,22 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    // ADD THIS PACKAGING OPTIONS BLOCK
+    packagingOptions {
+        exclude("META-INF/NOTICE.md")
+        exclude("META-INF/LICENSE.md")
+        exclude("META-INF/DEPENDENCIES")
+        exclude("META-INF/INDEX.LIST")
+    }
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -45,4 +53,12 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth:24.0.1")
     implementation("com.google.firebase:firebase-firestore:26.0.2")
+    implementation("com.google.android.material:material:1.9.0")
+    implementation("androidx.recyclerview:recyclerview:1.3.1")
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
+    implementation("androidx.cardview:cardview:1.0.0")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("com.sun.mail:android-mail:1.6.7")
+    implementation("com.sun.mail:android-activation:1.6.7")
 }
