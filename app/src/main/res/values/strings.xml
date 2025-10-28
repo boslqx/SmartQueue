@@ -239,4 +239,15 @@
     <!-- FAQ -->
     <string name="faq">FAQ</string>
     <string name="contact_support">Contact Support</string>
+
+    <string-array name="booking_status_filter">
+        <item>All</item>
+        <item>Pending</item>
+        <item>Approved</item>
+        <item>Confirmed</item>
+        <item>Cancelled</item>
+        <item>Rejected</item>
+        <item>Completed</item>
+    </string-array>
+
 </resources>

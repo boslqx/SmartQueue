@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/background"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Admin Login"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_dark"
+        android:layout_marginBottom="32dp" />
+
+    <EditText
+        android:id="@+id/etAdminEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Admin Email"
+        android:inputType="textEmailAddress"
+        android:padding="16dp"
+        android:textColor="@color/text_dark"
+        android:textColorHint="@color/text_dark"
+        android:background="@android:drawable/editbox_background"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/etAdminPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Admin Password"
+        android:inputType="textPassword"
+        android:padding="16dp"
+        android:textColor="@color/text_dark"
+        android:textColorHint="@color/text_dark"
+        android:background="@android:drawable/editbox_background"
+        android:layout_marginBottom="24dp"/>
+
+    <Button
+        android:id="@+id/btnAdminLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Admin Login"
+        android:backgroundTint="@color/accent"
+        android:textColor="@android:color/white"
+        android:padding="16dp"/>
+
+</LinearLayout>

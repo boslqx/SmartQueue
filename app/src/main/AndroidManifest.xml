@@ -34,7 +34,9 @@
         <activity android:name=".EditProfileActivity" android:exported="false" />
         <activity android:name=".ChangePasswordActivity" android:exported="false" />
         <activity android:name=".FAQActivity" android:exported="false" />
-
+        <activity android:name=".AdminDashboardActivity" android:exported="false" />
+        <activity android:name=".ServiceManagementActivity" android:exported="false"/>
+        <activity android:name=".AnnouncementManagementActivity" android:exported="false" />
 
         <!-- Main launcher activity -->
         <activity
