@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import android.util.Log;
 
 public class AnnouncementManagementActivity extends AppCompatActivity {
 
@@ -85,8 +86,6 @@ public class AnnouncementManagementActivity extends AppCompatActivity {
     private void addAnnouncement() {
         String title = etAnnouncementTitle.getText().toString().trim();
         String message = etAnnouncementMessage.getText().toString().trim();
-        String type = spinnerType.getSelectedItem().toString().split(" ")[0]; // Get just "info", "warning", etc.
-        int priority = spinnerPriority.getSelectedItemPosition() + 1; // 1-5
 
         if (title.isEmpty()) {
             etAnnouncementTitle.setError("Title is required");
@@ -98,25 +97,26 @@ public class AnnouncementManagementActivity extends AppCompatActivity {
             return;
         }
 
-        // Create announcement data matching your Firebase structure
+        // SIMPLE TEST DATA
         Map<String, Object> announcement = new HashMap<>();
+        announcement.put("title", title);
+        announcement.put("message", message);
         announcement.put("active", true);
         announcement.put("created_at", System.currentTimeMillis());
-        announcement.put("message", message);
-        announcement.put("priority", priority);
-        announcement.put("title", title);
-        announcement.put("type", type);
+        announcement.put("priority", 1);
+        announcement.put("type", "info");
 
-        // Add to Firestore
+        // Test with simple add
         db.collection("announcements")
                 .add(announcement)
                 .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(this, "Announcement posted successfully!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "SUCCESS! Announcement posted!", Toast.LENGTH_SHORT).show();
                     clearForm();
-                    loadAnnouncements(); // Refresh the list
+                    loadAnnouncements();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Error posting announcement: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                     Toast.makeText(this, "FAILED: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Log.e("FIREBASE_ERROR", "Error: " + e.getMessage());
                 });
     }
 
