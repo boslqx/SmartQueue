@@ -146,7 +146,7 @@ public class AdminBookingAdapter extends RecyclerView.Adapter<AdminBookingAdapte
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                     // Refresh the data
                     if (context instanceof BookingManagementActivity) {
-                        ((BookingManagementActivity) context).loadBookings();
+                        ((BookingManagementActivity) context).loadBookingsDirect();
                     }
                 })
                 .addOnFailureListener(e -> {

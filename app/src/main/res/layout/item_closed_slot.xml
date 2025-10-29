@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardClosedSlot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@color/booked_color">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📅 Date"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tvTimeSlot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🕐 Time"
+            android:textSize="14sp"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tvService"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📍 Service"
+            android:textSize="14sp"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvReason"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reason"
+            android:textSize="12sp"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="12dp" />
+
+        <Button
+            android:id="@+id/btnDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🗑️ Remove"
+            android:backgroundTint="@color/unavailable_color"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:padding="8dp" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
