@@ -82,8 +82,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         // View All Bookings
         if (cardBookings != null) {
             cardBookings.setOnClickListener(v -> {
-                startActivity(new Intent(this, QueueStatusActivity.class));
-                // Note: You can create a separate AdminBookingsActivity later
+                startActivity(new Intent(this, BookingManagementActivity.class));
             });
         }
 
