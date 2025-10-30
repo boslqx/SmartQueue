@@ -414,5 +414,20 @@
             android:layout_margin="16dp"
             android:visibility="gone" />
 
+        <!-- Book Again Button -->
+        <Button
+            android:id="@+id/btnBookAgain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📅 Book Again"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:backgroundTint="@color/primary"
+            android:textColor="@color/text_dark"
+            android:padding="16dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone" />
+
     </LinearLayout>
 </ScrollView>

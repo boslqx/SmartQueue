@@ -1,5 +1,6 @@
 package com.example.smartqueue;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -24,7 +25,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
     private TextView tvBookingId, tvServiceName, tvLocation, tvDate, tvTimeSlot;
     private TextView tvDuration, tvStatus, tvAmount, tvPaymentMethod;
     private TextView tvCreatedAt, tvUpdatedAt;
-    private Button btnCancelBooking;
+    private Button btnCancelBooking, btnBookAgain;
 
     private String bookingId;
     private BookingModel currentBooking;
@@ -49,6 +50,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
 
         btnBack.setOnClickListener(v -> finish());
         btnCancelBooking.setOnClickListener(v -> showCancelConfirmation());
+        btnBookAgain.setOnClickListener(v -> bookAgain());
     }
 
     private void initializeViews() {
@@ -65,6 +67,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
         tvCreatedAt = findViewById(R.id.tvCreatedAt);
         tvUpdatedAt = findViewById(R.id.tvUpdatedAt);
         btnCancelBooking = findViewById(R.id.btnCancelBooking);
+        btnBookAgain = findViewById(R.id.btnBookAgain);
     }
 
     private void loadBookingDetails() {
@@ -114,23 +117,10 @@ public class BookingDetailsActivity extends AppCompatActivity {
         tvDuration.setText(currentBooking.getDuration() + " hour" +
                 (currentBooking.getDuration() > 1 ? "s" : ""));
 
-        // Status with color
-        tvStatus.setText(currentBooking.getStatus().toUpperCase());
-        int statusColor;
-        switch (currentBooking.getStatus().toLowerCase()) {
-            case "confirmed":
-                statusColor = getResources().getColor(R.color.available_color);
-                break;
-            case "cancelled":
-                statusColor = getResources().getColor(R.color.booked_color);
-                break;
-            case "completed":
-                statusColor = getResources().getColor(R.color.gray_light);
-                break;
-            default:
-                statusColor = getResources().getColor(R.color.text_dark);
-        }
-        tvStatus.setTextColor(statusColor);
+        // Status with color (using computed status)
+        String displayStatus = currentBooking.getComputedStatus();
+        tvStatus.setText(displayStatus.toUpperCase());
+        tvStatus.setTextColor(currentBooking.getStatusColor(this));
 
         // Amount
         if (currentBooking.isPaid()) {
@@ -155,6 +145,13 @@ public class BookingDetailsActivity extends AppCompatActivity {
             btnCancelBooking.setVisibility(View.VISIBLE);
         } else {
             btnCancelBooking.setVisibility(View.GONE);
+        }
+
+        // Show/hide book again button
+        if (currentBooking.canRebook()) {
+            btnBookAgain.setVisibility(View.VISIBLE);
+        } else {
+            btnBookAgain.setVisibility(View.GONE);
         }
     }
 
@@ -202,5 +199,54 @@ public class BookingDetailsActivity extends AppCompatActivity {
         cancelLog.put("original_time", currentBooking.getTimeSlot());
 
         db.collection("cancel_log").add(cancelLog);
+    }
+
+    private void bookAgain() {
+        if (currentBooking == null) return;
+
+        String serviceType = currentBooking.getServiceType();
+
+        // For lecturer consultation, go to lecturer list first
+        if ("lecturer_consultation".equalsIgnoreCase(serviceType)) {
+            Intent intent = new Intent(this, SelectSlotActivity.class);
+            intent.putExtra("serviceType", serviceType);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
+        // Load service info first
+        db.collection("services").document(serviceType)
+                .get()
+                .addOnSuccessListener(document -> {
+                    if (document.exists()) {
+                        ServiceModel serviceModel = document.toObject(ServiceModel.class);
+                        if (serviceModel != null) {
+                            // Navigate to TimeSlotActivity with booking data
+                            Intent intent = new Intent(this, TimeSlotActivity.class);
+                            intent.putExtra("serviceType", currentBooking.getServiceType());
+                            intent.putExtra("serviceName", currentBooking.getServiceName());
+                            intent.putExtra("locationId", currentBooking.getLocationId());
+                            intent.putExtra("availableFrom", serviceModel.getAvailable_from());
+                            intent.putExtra("availableTo", serviceModel.getAvailable_to());
+                            intent.putExtra("maxDuration", serviceModel.getMax_duration());
+                            intent.putExtra("isPaid", serviceModel.isIs_paid());
+                            intent.putExtra("price", serviceModel.getPrice());
+
+                            // Optional: pre-select the same time if available
+                            intent.putExtra("suggestedStartTime", currentBooking.getStartTime());
+                            intent.putExtra("suggestedEndTime", currentBooking.getEndTime());
+
+                            startActivity(intent);
+                            finish();
+                        }
+                    } else {
+                        Toast.makeText(this, "Service not found", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error loading service: " + e.getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                });
     }
 }

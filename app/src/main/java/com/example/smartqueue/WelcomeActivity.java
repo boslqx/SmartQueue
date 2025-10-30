@@ -27,8 +27,6 @@ public class WelcomeActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-        // Add a splash delay (optional - remove if you don't want any delay)
         new Handler().postDelayed(() -> {
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
             FirebaseUser user = mAuth.getCurrentUser();
@@ -39,9 +37,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 finish(); // close welcome screen
             } else {
                 // User is not logged in or not verified - stay on welcome screen
-                // The buttons will remain clickable for login/register
-                // No need to redirect to LoginActivity automatically
             }
-        }, 1000); // 1-second splash delay (adjust as needed)
+        }, 1000); // 1 second splash delay
     }
 }

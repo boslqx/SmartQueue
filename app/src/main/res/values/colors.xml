@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Add these to your res/values/colors.xml -->
+    <!-- color palette -->
     <color name="background">#FCF9EA</color>
     <color name="primary">#BADFDB</color>
     <color name="accent">#FFA4A4</color>

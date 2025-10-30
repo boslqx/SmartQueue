@@ -41,6 +41,58 @@
             android:layout_height="32dp" />
     </LinearLayout>
 
+    <!-- Search and Filter Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:paddingTop="8dp"
+        android:background="@color/primary">
+
+        <!-- Search Bar -->
+        <EditText
+            android:id="@+id/etSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="🔍 Search by service, location, date..."
+            android:drawablePadding="12dp"
+            android:padding="14dp"
+            android:background="@drawable/search_background"
+            android:textColor="@color/text_dark"
+            android:textColorHint="@color/text_dark"
+            android:textSize="14sp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Filter Spinner -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/filter_background"
+            android:padding="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📊 Filter:"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_dark"
+                android:layout_marginEnd="12dp" />
+
+            <Spinner
+                android:id="@+id/spinnerFilter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:background="@android:color/transparent"
+                android:popupBackground="@drawable/spinner_popup_background" />
+        </LinearLayout>
+    </LinearLayout>
+
     <!-- Content Area -->
     <FrameLayout
         android:layout_width="match_parent"
@@ -84,7 +136,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No bookings yet"
+                android:text="No bookings found"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_dark"
@@ -93,7 +145,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Your bookings will appear here"
+                android:text="Try adjusting your filters"
                 android:textSize="14sp"
                 android:textColor="@color/text_dark" />
         </LinearLayout>
