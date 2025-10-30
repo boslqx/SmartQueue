@@ -86,11 +86,10 @@ public class AdminDashboardActivity extends AppCompatActivity {
             });
         }
 
-        // User Management
+        // Users Management
         if (cardUsers != null) {
             cardUsers.setOnClickListener(v -> {
-                Toast.makeText(this, "User Management - Coming Soon!", Toast.LENGTH_SHORT).show();
-                // TODO: Create UserManagementActivity
+                startActivity(new Intent(this, UserManagementActivity.class));
             });
         }
 
