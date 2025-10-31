@@ -122,9 +122,9 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Services Card -->
+            <!-- Lecturer Card  -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardServices"
+                android:id="@+id/cardLecturer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
@@ -145,7 +145,7 @@
                     <TextView
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:text="🏢"
+                        android:text="👨‍🏫"
                         android:textSize="32sp"
                         android:gravity="center" />
 
@@ -159,7 +159,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Services"
+                            android:text="Lecturer Management"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:textColor="@color/text_dark" />
@@ -167,7 +167,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Manage available services"
+                            android:text="Add, edit, and manage lecturers"
                             android:textSize="14sp"
                             android:textColor="@color/text_dark"
                             android:layout_marginTop="4dp" />

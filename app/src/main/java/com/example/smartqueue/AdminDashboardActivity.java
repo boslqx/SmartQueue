@@ -17,7 +17,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
     private ImageView btnBack;
 
     // Cards
-    private CardView cardAnnouncements, cardServices, cardClosedSlots;
+    private CardView cardAnnouncements, cardLecturer, cardClosedSlots;
     private CardView cardBookings, cardUsers, cardStatistics;
 
     @Override
@@ -45,7 +45,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
         // Menu cards
         cardAnnouncements = findViewById(R.id.cardAnnouncements);
-        cardServices = findViewById(R.id.cardServices);
+        cardLecturer = findViewById(R.id.cardLecturer);
         cardClosedSlots = findViewById(R.id.cardClosedSlots);
         cardBookings = findViewById(R.id.cardBookings);
         cardUsers = findViewById(R.id.cardUsers);
@@ -64,11 +64,11 @@ public class AdminDashboardActivity extends AppCompatActivity {
                 startActivity(new Intent(this, AnnouncementManagementActivity.class));
             });
         }
-
-        // Service Management
-        if (cardServices != null) {
-            cardServices.setOnClickListener(v -> {
-                startActivity(new Intent(this, ServiceManagementActivity.class));
+        // Lecturer Management - Fixed redirect
+        if (cardLecturer != null) {
+            cardLecturer.setOnClickListener(v -> {
+                Intent intent = new Intent(this, AdminLecturerManagementActivity.class);
+                startActivity(intent);
             });
         }
 
