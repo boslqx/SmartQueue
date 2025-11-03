@@ -39,7 +39,7 @@
         <activity android:name=".ClosedTimeSlotsActivity" android:exported="false" />
         <activity android:name=".BookingManagementActivity" android:exported="false" />
         <activity android:name=".UserManagementActivity" android:exported="false" />
-
+        <activity android:name=".AdminStatisticsActivity" android:exported="false" />
         <!-- Main launcher activity -->
         <activity
             android:name=".WelcomeActivity"

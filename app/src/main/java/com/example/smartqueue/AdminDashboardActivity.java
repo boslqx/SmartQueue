@@ -96,8 +96,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         // Statistics
         if (cardStatistics != null) {
             cardStatistics.setOnClickListener(v -> {
-                Toast.makeText(this, "Statistics - Coming Soon!", Toast.LENGTH_SHORT).show();
-                // TODO: Create AdminStatisticsActivity
+                startActivity(new Intent(this, AdminStatisticsActivity.class));
             });
         }
     }
