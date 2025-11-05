@@ -8,6 +8,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class RegisterStep1Activity extends AppCompatActivity {
 
+    // CONFIGURE YOUR ALLOWED EMAIL DOMAIN HERE
+    private static final String ALLOWED_EMAIL_DOMAIN = "@student.newiniti.edu.my";
+
     EditText etName, etEmail, etPassword, etConfirm;
     Spinner spinnerSchool;
     Button btnNext;
@@ -35,15 +38,47 @@ public class RegisterStep1Activity extends AppCompatActivity {
             String pass = etPassword.getText().toString();
             String confirm = etConfirm.getText().toString();
 
-            if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || TextUtils.isEmpty(pass)) {
-                Toast.makeText(this, "Please fill all required fields", Toast.LENGTH_SHORT).show();
+            // Validate all fields
+            if (TextUtils.isEmpty(name)) {
+                etName.setError("Name is required");
+                etName.requestFocus();
                 return;
             }
+
+            if (TextUtils.isEmpty(email)) {
+                etEmail.setError("Email is required");
+                etEmail.requestFocus();
+                return;
+            }
+
+            // VALIDATE STUDENT EMAIL DOMAIN
+            if (!isValidStudentEmail(email)) {
+                etEmail.setError("Please use your student email (" + ALLOWED_EMAIL_DOMAIN + ")");
+                etEmail.requestFocus();
+                Toast.makeText(this, "Only student emails are allowed!", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            if (TextUtils.isEmpty(pass)) {
+                etPassword.setError("Password is required");
+                etPassword.requestFocus();
+                return;
+            }
+
+            if (pass.length() < 6) {
+                etPassword.setError("Password must be at least 6 characters");
+                etPassword.requestFocus();
+                return;
+            }
+
             if (!pass.equals(confirm)) {
+                etConfirm.setError("Passwords do not match");
+                etConfirm.requestFocus();
                 Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
                 return;
             }
 
+            // All validations passed - proceed to next step
             Intent i = new Intent(this, RegisterStep2Activity.class);
             i.putExtra("name", name);
             i.putExtra("email", email);
@@ -51,5 +86,28 @@ public class RegisterStep1Activity extends AppCompatActivity {
             i.putExtra("password", pass);
             startActivity(i);
         });
+    }
+
+    /**
+     * Validates if the email ends with the allowed student domain
+     * @param email The email address to validate
+     * @return true if valid student email, false otherwise
+     */
+    private boolean isValidStudentEmail(String email) {
+        if (email == null || email.isEmpty()) {
+            return false;
+        }
+
+        // Convert to lowercase for case-insensitive comparison
+        String emailLower = email.toLowerCase();
+
+        // Check if email ends with the allowed domain
+        boolean endsWithDomain = emailLower.endsWith(ALLOWED_EMAIL_DOMAIN.toLowerCase());
+
+        // Optional: Additional validation for email format
+        // Check if there's at least one character before the @ symbol
+        boolean hasUsername = emailLower.indexOf('@') > 0;
+
+        return endsWithDomain && hasUsername;
     }
 }
