@@ -7,16 +7,36 @@
     android:padding="16dp"
     android:background="#F5F5F5">
 
-    <!-- Header -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Announcement Management"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginBottom="24dp"
-        android:textColor="#333333" />
+        android:padding="16dp"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_back"
+            android:contentDescription="Back"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="12dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="#333333" />
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="48dp"
+            android:layout_marginEnd="48dp"
+            android:text="Announcement Management"
+            android:textColor="#333333"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
 
     <!-- Add New Announcement Section -->
     <androidx.cardview.widget.CardView

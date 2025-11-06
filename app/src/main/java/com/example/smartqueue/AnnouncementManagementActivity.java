@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+import android.widget.ImageView;
+import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -72,9 +74,31 @@ public class AnnouncementManagementActivity extends AppCompatActivity {
         spinnerPriority = findViewById(R.id.spinnerPriority);
         btnAddAnnouncement = findViewById(R.id.btnAddAnnouncement);
         recyclerViewAnnouncements = findViewById(R.id.recyclerViewAnnouncements);
-
         announcementList = new ArrayList<>();
         adapter = new AnnouncementAdapter(announcementList);
+        ImageView btnBack = findViewById(R.id.btnBack);
+        Log.d(TAG, "Back button found: " + (btnBack != null));
+        Log.d(TAG, "Back button clickable: " + (btnBack != null && btnBack.isClickable()));
+
+        if (btnBack != null) {
+            // Make absolutely sure it's clickable
+            btnBack.setClickable(true);
+            btnBack.setFocusable(true);
+
+            btnBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "========= BACK BUTTON CLICKED =========");
+                    Toast.makeText(AnnouncementManagementActivity.this,
+                            "Back button pressed!", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            });
+            Log.d(TAG, "Back button listener attached successfully");
+        } else {
+            Log.e(TAG, "ERROR: Back button is NULL!");
+        }
+
 
         recyclerViewAnnouncements.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewAnnouncements.setAdapter(adapter);
