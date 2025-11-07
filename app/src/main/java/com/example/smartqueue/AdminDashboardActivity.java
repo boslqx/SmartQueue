@@ -14,7 +14,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private ImageView btnBack;
+    private ImageView btnBack, btnSettings;
 
     // Cards
     private CardView cardAnnouncements, cardLecturer, cardClosedSlots;
@@ -42,6 +42,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
     private void initializeViews() {
         btnBack = findViewById(R.id.btnBack);
+        btnSettings = findViewById(R.id.btnSettings);
 
         // Menu cards
         cardAnnouncements = findViewById(R.id.cardAnnouncements);
@@ -97,6 +98,13 @@ public class AdminDashboardActivity extends AppCompatActivity {
         if (cardStatistics != null) {
             cardStatistics.setOnClickListener(v -> {
                 startActivity(new Intent(this, AdminStatisticsActivity.class));
+            });
+        }
+        // Settings button
+        if (btnSettings != null) {
+            btnSettings.setOnClickListener(v -> {
+                Intent intent = new Intent(this, AdminSettingsActivity.class);
+                startActivity(intent);
             });
         }
     }

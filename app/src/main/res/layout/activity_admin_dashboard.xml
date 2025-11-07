@@ -42,6 +42,16 @@
                 android:textColor="@android:color/white"
                 android:gravity="center" />
 
+            <ImageView
+                android:id="@+id/btnSettings"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_settings"
+                android:contentDescription="Settings"
+                android:clickable="true"
+                android:focusable="true"
+                app:tint="@color/text_dark" />
+
             <View
                 android:layout_width="32dp"
                 android:layout_height="32dp" />

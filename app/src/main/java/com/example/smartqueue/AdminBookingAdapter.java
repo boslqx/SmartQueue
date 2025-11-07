@@ -116,7 +116,7 @@ public class AdminBookingAdapter extends RecyclerView.Adapter<AdminBookingAdapte
             updateBookingStatus(booking.getDocumentId(), "cancelled", "Booking cancelled");
         });
 
-        // View Details button (same as original)
+        // View Details button
         holder.btnViewDetails.setOnClickListener(v -> {
             Intent intent = new Intent(context, BookingDetailsActivity.class);
             intent.putExtra("bookingId", booking.getDocumentId());
