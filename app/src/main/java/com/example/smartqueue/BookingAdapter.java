@@ -43,25 +43,8 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
         String displayStatus = booking.getComputedStatus();
         holder.tvStatus.setText(displayStatus.toUpperCase());
 
-        // Set status color based on computed status
-        int statusColor;
-        switch (displayStatus.toLowerCase()) {
-            case "confirmed":
-                statusColor = context.getResources().getColor(R.color.available_color);
-                break;
-            case "cancelled":
-                statusColor = context.getResources().getColor(R.color.booked_color);
-                break;
-            case "expired":
-                statusColor = context.getResources().getColor(R.color.gray_light);
-                break;
-            case "completed":
-                statusColor = context.getResources().getColor(R.color.gray_light);
-                break;
-            default:
-                statusColor = context.getResources().getColor(R.color.text_dark);
-        }
-        holder.tvStatus.setTextColor(statusColor);
+        // Set status color using BookingModel method
+        holder.tvStatus.setTextColor(booking.getStatusColor(context));
 
         // Set payment info
         if (booking.isPaid()) {
@@ -81,12 +64,15 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
             context.startActivity(intent);
         });
 
-        // Highlight card based on status
-        if ("cancelled".equalsIgnoreCase(displayStatus) || "expired".equalsIgnoreCase(displayStatus)) {
-            holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.gray_light));
-            holder.cardView.setAlpha(0.7f);
+        // Set card background color based on status
+        holder.cardView.setCardBackgroundColor(booking.getCardBackgroundColor(context));
+
+        // Set alpha for non-active bookings
+        if ("cancelled".equalsIgnoreCase(displayStatus) ||
+                "expired".equalsIgnoreCase(displayStatus) ||
+                "completed".equalsIgnoreCase(displayStatus)) {
+            holder.cardView.setAlpha(0.75f);
         } else {
-            holder.cardView.setCardBackgroundColor(context.getResources().getColor(android.R.color.white));
             holder.cardView.setAlpha(1.0f);
         }
     }

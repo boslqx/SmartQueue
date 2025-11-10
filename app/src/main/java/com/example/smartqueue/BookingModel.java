@@ -124,7 +124,7 @@ public class BookingModel {
         }
     }
 
-    // NEW: Check if booking is expired
+    // Check if booking is expired
     public boolean isExpired() {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
@@ -137,7 +137,7 @@ public class BookingModel {
         }
     }
 
-    // NEW: Get computed status (expired takes precedence)
+    // Get computed status (expired takes precedence)
     public String getComputedStatus() {
         if (isExpired() && "confirmed".equalsIgnoreCase(status)) {
             return "expired";
@@ -161,5 +161,43 @@ public class BookingModel {
             default:
                 return computedStatus;
         }
+    }
+
+    // NEW: Check if booking can be rebooked
+    public boolean canRebook() {
+        String computedStatus = getComputedStatus();
+        return "expired".equalsIgnoreCase(computedStatus) ||
+                "cancelled".equalsIgnoreCase(computedStatus) ||
+                "completed".equalsIgnoreCase(computedStatus);
+    }
+
+    // NEW: Get color for status
+    public int getStatusColor(android.content.Context context) {
+        String computedStatus = getComputedStatus();
+        switch (computedStatus.toLowerCase()) {
+            case "confirmed":
+                return context.getResources().getColor(R.color.available_color);
+            case "cancelled":
+                return context.getResources().getColor(R.color.booked_color);
+            case "expired":
+                return context.getResources().getColor(R.color.unavailable_color);
+            case "completed":
+                return context.getResources().getColor(R.color.gray_light);
+            default:
+                return context.getResources().getColor(R.color.text_dark);
+        }
+    }
+
+    // NEW: Get background color for card
+    public int getCardBackgroundColor(android.content.Context context) {
+        String computedStatus = getComputedStatus();
+        if ("expired".equalsIgnoreCase(computedStatus)) {
+            return 0xFFFFE0E0; // Light red for expired
+        } else if ("cancelled".equalsIgnoreCase(computedStatus)) {
+            return 0xFFE0E0E0; // Gray for cancelled
+        } else if ("completed".equalsIgnoreCase(computedStatus)) {
+            return 0xFFE8F5E9; // Light green for completed
+        }
+        return context.getResources().getColor(android.R.color.white);
     }
 }

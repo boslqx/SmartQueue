@@ -40,7 +40,7 @@ public class PaymentSuccessActivity extends AppCompatActivity {
 
         btnDone.setOnClickListener(v -> {
             // Navigate back to main activity or dashboard
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, DashboardActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
             finish();
