@@ -22,7 +22,7 @@ import java.util.Locale;
 public class TimeSlotActivity extends AppCompatActivity {
 
     private static final String TAG = "TimeSlotActivity";
-    private static final int MAX_BOOKING_DAYS = 7; // Allow booking up to 7 days in advance
+    private static final int MAX_BOOKING_DAYS = 7;
 
     private FirebaseFirestore db;
     private String serviceType, locationId, serviceName, extraInfo;
@@ -51,9 +51,9 @@ public class TimeSlotActivity extends AppCompatActivity {
 
         initializeViews();
         getIntentData();
+        setupTimeSlotRecyclerView(); // FIXED: Initialize adapter BEFORE date list
         setupDateList();
         setupDateRecyclerView();
-        setupTimeSlotRecyclerView();
         setupButton();
         setupBackButton();
         updateDurationText();
@@ -80,7 +80,6 @@ public class TimeSlotActivity extends AppCompatActivity {
         availableFrom = intent.getStringExtra("availableFrom");
         availableTo = intent.getStringExtra("availableTo");
 
-        // Music room can book up to 3 hours, others only 1 hour
         if ("music_room".equalsIgnoreCase(serviceType)) {
             maxDuration = 3;
         } else {
@@ -90,7 +89,6 @@ public class TimeSlotActivity extends AppCompatActivity {
         isPaid = intent.getBooleanExtra("isPaid", false);
         price = intent.getDoubleExtra("price", 0.0);
 
-        // Update UI
         tvServiceTitle.setText(serviceName);
         tvLocation.setText(locationId + (extraInfo != null ? " (" + extraInfo + ")" : ""));
         Log.d(TAG, "Service: " + serviceType + ", Location: " + locationId);
@@ -112,7 +110,6 @@ public class TimeSlotActivity extends AppCompatActivity {
 
             DateItemModel dateItem = new DateItemModel(date, dayOfWeek, dayOfMonth, monthYear, isToday);
 
-            // Select today by default
             if (i == 0) {
                 dateItem.setSelected(true);
                 selectedDate = date;
@@ -136,7 +133,6 @@ public class TimeSlotActivity extends AppCompatActivity {
         rvDates.setLayoutManager(layoutManager);
         rvDates.setAdapter(dateAdapter);
 
-        // Load initial time slots for today
         loadTimeSlots();
     }
 
@@ -171,19 +167,16 @@ public class TimeSlotActivity extends AppCompatActivity {
     private void handleSlotSelection(int position) {
         TimeSlotModel clickedSlot = timeSlots.get(position);
 
-        // Can't select if not available
         if (!clickedSlot.isAvailable()) {
             Toast.makeText(this, "This time slot is already booked", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (clickedSlot.isSelected()) {
-            // Deselect the slot
             clickedSlot.setSelected(false);
             selectedSlots.remove(clickedSlot);
             currentSelectedDuration--;
         } else {
-            // Select the slot (if we haven't reached max duration)
             if (currentSelectedDuration < maxDuration) {
                 clickedSlot.setSelected(true);
                 selectedSlots.add(clickedSlot);
@@ -194,24 +187,25 @@ public class TimeSlotActivity extends AppCompatActivity {
             }
         }
 
-        // Sort selected slots by time
         selectedSlots.sort((slot1, slot2) -> slot1.getStartTime().compareTo(slot2.getStartTime()));
 
-        // Check if selected slots are consecutive (only if more than 1 hour selected)
         if (currentSelectedDuration > 1 && !areSlotsConsecutive(selectedSlots)) {
             Toast.makeText(this, "Please select consecutive time slots", Toast.LENGTH_SHORT).show();
-            // Undo the last selection
             clickedSlot.setSelected(false);
             selectedSlots.remove(clickedSlot);
             currentSelectedDuration--;
-            timeSlotAdapter.notifyDataSetChanged();
+            if (timeSlotAdapter != null) {
+                timeSlotAdapter.notifyDataSetChanged();
+            }
             return;
         }
 
-        timeSlotAdapter.updateSelectedDuration(currentSelectedDuration);
+        if (timeSlotAdapter != null) {
+            timeSlotAdapter.updateSelectedDuration(currentSelectedDuration);
+            timeSlotAdapter.notifyDataSetChanged();
+        }
         updateDurationText();
         btnConfirmBooking.setEnabled(currentSelectedDuration > 0);
-        timeSlotAdapter.notifyDataSetChanged();
     }
 
     private boolean areSlotsConsecutive(List<TimeSlotModel> slots) {
@@ -234,10 +228,12 @@ public class TimeSlotActivity extends AppCompatActivity {
         }
         selectedSlots.clear();
         currentSelectedDuration = 0;
-        timeSlotAdapter.updateSelectedDuration(0);
+        if (timeSlotAdapter != null) {
+            timeSlotAdapter.updateSelectedDuration(0);
+            timeSlotAdapter.notifyDataSetChanged();
+        }
         updateDurationText();
         btnConfirmBooking.setEnabled(false);
-        timeSlotAdapter.notifyDataSetChanged();
     }
 
     private void updateDurationText() {
@@ -278,7 +274,11 @@ public class TimeSlotActivity extends AppCompatActivity {
                 TimeSlotModel slot = new TimeSlotModel(timeRange, startTime, endTime, true);
                 timeSlots.add(slot);
             }
-            timeSlotAdapter.notifyDataSetChanged();
+
+            // FIXED: Add null check
+            if (timeSlotAdapter != null) {
+                timeSlotAdapter.notifyDataSetChanged();
+            }
             Log.d(TAG, "Generated " + timeSlots.size() + " time slots");
         } catch (Exception e) {
             Log.e(TAG, "Error generating time slots: " + e.getMessage());
@@ -300,7 +300,10 @@ public class TimeSlotActivity extends AppCompatActivity {
                         String bookedEndTime = document.getString("end_time");
                         markSlotsAsBooked(bookedStartTime, bookedEndTime);
                     }
-                    timeSlotAdapter.notifyDataSetChanged();
+                    // FIXED: Add null check
+                    if (timeSlotAdapter != null) {
+                        timeSlotAdapter.notifyDataSetChanged();
+                    }
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error fetching bookings: " + e.getMessage());
