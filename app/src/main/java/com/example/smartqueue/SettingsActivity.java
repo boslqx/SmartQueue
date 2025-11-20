@@ -201,6 +201,8 @@ public class SettingsActivity extends AppCompatActivity {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             }
 
+            recreate();
+
             Toast.makeText(this, "Dark mode " + (isChecked ? "enabled" : "disabled"),
                     Toast.LENGTH_SHORT).show();
         });
