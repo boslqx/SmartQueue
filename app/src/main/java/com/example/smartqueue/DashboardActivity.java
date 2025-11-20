@@ -304,52 +304,73 @@ public class DashboardActivity extends AppCompatActivity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String today = dateFormat.format(new Date());
 
-        // Total bookings
-        db.collection("bookings")
-                .whereEqualTo("user_id", userId)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    int count = queryDocumentSnapshots.size();
-                    tvTotalBookingsCount.setText(String.valueOf(count));
-                });
-
-        // Count active bookings (confirmed status)
-        db.collection("bookings")
-                .whereEqualTo("user_id", userId)
-                .whereEqualTo("status", "confirmed")
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    int count = queryDocumentSnapshots.size();
-                    tvActiveBookings.setText(count + (count == 1 ? " active booking" : " active bookings"));
-                });
-
-        // Count upcoming bookings (future dates)
-        db.collection("bookings")
-                .whereEqualTo("user_id", userId)
-                .whereEqualTo("status", "confirmed")
-                .whereGreaterThanOrEqualTo("date", today)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    int count = queryDocumentSnapshots.size();
-                    tvUpcomingBookings.setText(count + (count == 1 ? " upcoming" : " upcoming"));
-                });
-
-        // This week bookings
+        // Calculate week range
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         String weekStart = dateFormat.format(calendar.getTime());
 
-        calendar.add(Calendar.DAY_OF_WEEK, 7);
+        calendar.add(Calendar.DAY_OF_WEEK, 6);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
         String weekEnd = dateFormat.format(calendar.getTime());
 
+        Log.d(TAG, "Week range: " + weekStart + " to " + weekEnd);
+        Log.d(TAG, "Today: " + today);
+
+        // Fetch all user bookings once and filter in code
         db.collection("bookings")
                 .whereEqualTo("user_id", userId)
-                .whereGreaterThanOrEqualTo("date", weekStart)
-                .whereLessThan("date", weekEnd)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    int count = queryDocumentSnapshots.size();
-                    tvThisWeekCount.setText(String.valueOf(count));
+                    int totalCount = 0;
+                    int activeCount = 0;
+                    int upcomingCount = 0;
+                    int thisWeekCount = 0;
+
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        totalCount++;
+
+                        String status = document.getString("status");
+                        String bookingDate = document.getString("date");
+
+                        // Count active bookings
+                        if ("confirmed".equalsIgnoreCase(status)) {
+                            activeCount++;
+
+                            // Count upcoming bookings (future dates)
+                            if (bookingDate != null && bookingDate.compareTo(today) >= 0) {
+                                upcomingCount++;
+                            }
+                        }
+
+                        // Count this week bookings (any status)
+                        if (bookingDate != null &&
+                                bookingDate.compareTo(weekStart) >= 0 &&
+                                bookingDate.compareTo(weekEnd) <= 0) {
+                            thisWeekCount++;
+                        }
+                    }
+
+                    // Update UI
+                    tvTotalBookingsCount.setText(String.valueOf(totalCount));
+                    tvActiveBookings.setText(activeCount + (activeCount == 1 ? " active booking" : " active bookings"));
+                    tvUpcomingBookings.setText(upcomingCount + (upcomingCount == 1 ? " upcoming" : " upcoming"));
+                    tvThisWeekCount.setText(String.valueOf(thisWeekCount));
+
+                    Log.d(TAG, "Stats - Total: " + totalCount + ", Active: " + activeCount +
+                            ", Upcoming: " + upcomingCount + ", This Week: " + thisWeekCount);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error loading booking stats: " + e.getMessage());
+                    tvTotalBookingsCount.setText("0");
+                    tvActiveBookings.setText("0 active");
+                    tvUpcomingBookings.setText("0 upcoming");
+                    tvThisWeekCount.setText("0");
                 });
     }
 
