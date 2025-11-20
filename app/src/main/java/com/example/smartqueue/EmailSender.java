@@ -11,28 +11,14 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-/**
- * Email utility class for sending booking confirmation emails
- * Uses JavaMail API without Firebase Cloud Functions (free)
- *
- * Add to build.gradle (Module: app):
- * implementation 'com.sun.mail:android-mail:1.6.7'
- * implementation 'com.sun.mail:android-activation:1.6.7'
- */
 public class EmailSender {
 
     private static final String TAG = "EmailSender";
-
-    // Configure your email credentials here
-    // For Gmail: Use App Password (not regular password)
-    // Go to: Google Account > Security > 2-Step Verification > App passwords
     private static final String SENDER_EMAIL = "bosliangqx@gmail.com";
     private static final String SENDER_PASSWORD = "hlmh gnix pgjg fqeu"; // Use App Password!
     private static final String SENDER_NAME = "SmartQueue";
 
-    /**
-     * Send booking confirmation email
-     */
+    // Send booking confirmation email
     public static void sendBookingConfirmation(BookingModel booking, String bookingId) {
         new SendEmailTask().execute(
                 booking.getUserEmail(),
@@ -41,9 +27,8 @@ public class EmailSender {
         );
     }
 
-    /**
-     * Create HTML email content for booking confirmation
-     */
+    // Create HTML email content for booking confirmation
+
     private static String createBookingConfirmationHTML(BookingModel booking, String bookingId) {
         String shortId = bookingId.substring(0, 8).toUpperCase();
 
@@ -122,9 +107,7 @@ public class EmailSender {
                 "</html>";
     }
 
-    /**
-     * AsyncTask to send email in background thread
-     */
+    // AsyncTask to send email in background thread
     private static class SendEmailTask extends AsyncTask<String, Void, Boolean> {
 
         @Override
