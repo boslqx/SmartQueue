@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -51,7 +52,7 @@ public class TimeSlotActivity extends AppCompatActivity {
 
         initializeViews();
         getIntentData();
-        setupTimeSlotRecyclerView(); // FIXED: Initialize adapter BEFORE date list
+        setupTimeSlotRecyclerView();
         setupDateList();
         setupDateRecyclerView();
         setupButton();
@@ -271,11 +272,12 @@ public class TimeSlotActivity extends AppCompatActivity {
                 String startTime = String.format(Locale.getDefault(), "%02d:00", hour);
                 String endTime = String.format(Locale.getDefault(), "%02d:00", hour + 1);
                 String timeRange = startTime + " - " + endTime;
+
+                // All slots start as available
                 TimeSlotModel slot = new TimeSlotModel(timeRange, startTime, endTime, true);
                 timeSlots.add(slot);
             }
 
-            // FIXED: Add null check
             if (timeSlotAdapter != null) {
                 timeSlotAdapter.notifyDataSetChanged();
             }
@@ -291,16 +293,18 @@ public class TimeSlotActivity extends AppCompatActivity {
                 .whereEqualTo("service_type", serviceType)
                 .whereEqualTo("location_id", locationId)
                 .whereEqualTo("date", selectedDate)
-                .whereEqualTo("status", "confirmed")
+                .whereIn("status", Arrays.asList("confirmed", "closed", "cancelled"))
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    Log.d(TAG, "Found " + queryDocumentSnapshots.size() + " existing bookings");
+                    Log.d(TAG, "Found " + queryDocumentSnapshots.size() + " bookings/closed slots");
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         String bookedStartTime = document.getString("start_time");
                         String bookedEndTime = document.getString("end_time");
+                        String status = document.getString("status");
+
+                        Log.d(TAG, "Slot: " + bookedStartTime + "-" + bookedEndTime + " Status: " + status);
                         markSlotsAsBooked(bookedStartTime, bookedEndTime);
                     }
-                    // FIXED: Add null check
                     if (timeSlotAdapter != null) {
                         timeSlotAdapter.notifyDataSetChanged();
                     }
@@ -321,7 +325,31 @@ public class TimeSlotActivity extends AppCompatActivity {
     }
 
     private boolean isTimeOverlap(String slotStart, String slotEnd, String bookedStart, String bookedEnd) {
-        return (slotStart.compareTo(bookedEnd) < 0 && slotEnd.compareTo(bookedStart) > 0);
+        // Normalize all times to ensure consistent format (HH:mm)
+        String normSlotStart = normalizeTime(slotStart);
+        String normSlotEnd = normalizeTime(slotEnd);
+        String normBookedStart = normalizeTime(bookedStart);
+        String normBookedEnd = normalizeTime(bookedEnd);
+
+        Log.d(TAG, "Overlap check: " + normSlotStart + "-" + normSlotEnd +
+                " vs " + normBookedStart + "-" + normBookedEnd);
+
+        // A slot overlaps if:
+        // - It starts before the booked period ends AND ends after the booked period starts
+        // But we exclude exact boundary matches
+        boolean overlaps = (normSlotStart.compareTo(normBookedEnd) < 0) &&
+                (normSlotEnd.compareTo(normBookedStart) > 0);
+
+        Log.d(TAG, "Result: " + overlaps);
+        return overlaps;
+    }
+
+    private String normalizeTime(String time) {
+        // Convert "1400" to "14:00" format, or ensure "14:00" format
+        if (time != null && time.length() == 4 && !time.contains(":")) {
+            return time.substring(0, 2) + ":" + time.substring(2);
+        }
+        return time;
     }
 
     private void confirmBooking() {

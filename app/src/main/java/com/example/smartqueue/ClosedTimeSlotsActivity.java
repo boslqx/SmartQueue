@@ -20,8 +20,8 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +68,9 @@ public class ClosedTimeSlotsActivity extends AppCompatActivity {
     }
 
     private void loadClosedSlots() {
-        db.collection("closed_slots")
+        // Load from bookings collection with status = "cancelled" OR "closed"
+        db.collection("bookings")
+                .whereIn("status", Arrays.asList("cancelled", "closed"))
                 .orderBy("date", Query.Direction.ASCENDING)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -77,8 +79,21 @@ public class ClosedTimeSlotsActivity extends AppCompatActivity {
 
                         for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                             try {
-                                ClosedSlotModel slot = document.toObject(ClosedSlotModel.class);
+                                ClosedSlotModel slot = new ClosedSlotModel();
                                 slot.setId(document.getId());
+                                slot.setDate(document.getString("date"));
+                                slot.setStart_time(document.getString("start_time"));
+                                slot.setEnd_time(document.getString("end_time"));
+                                slot.setService_type(document.getString("service_name"));
+
+                                // Add location info
+                                String location = document.getString("location_id");
+                                if (location != null && !location.isEmpty()) {
+                                    slot.setService_type(slot.getService_type() + " - " + location);
+                                }
+
+                                slot.setReason(document.getString("notes"));
+                                slot.setCreated_at(document.getTimestamp("created_at"));
                                 closedSlotList.add(slot);
                             } catch (Exception e) {
                                 Log.e(TAG, "Error parsing slot: " + e.getMessage());
@@ -116,8 +131,27 @@ public class ClosedTimeSlotsActivity extends AppCompatActivity {
         EditText etReason = dialogView.findViewById(R.id.etReason);
 
         // Setup service spinner
-        String[] services = {"All Services", "discussion_room", "pool_table", "ping_pong", "music_room", "lecturer_consultation"};
-        ArrayAdapter<String> serviceAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, services);
+        String[] services = {
+                "Discussion Room - All",
+                "Discussion Room - Room L1",
+                "Discussion Room - Room L2",
+                "Discussion Room - Room S1",
+                "Discussion Room - Room S2",
+                "Discussion Room - Room S3",
+                "Pool Table - All",
+                "Pool Table - Pool Table 1",
+                "Pool Table - Pool Table 2",
+                "Ping Pong - All",
+                "Ping Pong - Table 1",
+                "Ping Pong - Table 2",
+                "Music Room"
+        };
+
+        ArrayAdapter<String> serviceAdapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_item,
+                services
+        );
         serviceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerService.setAdapter(serviceAdapter);
 
@@ -137,7 +171,7 @@ public class ClosedTimeSlotsActivity extends AppCompatActivity {
                     String date = etDate.getText().toString().trim();
                     String startTime = etStartTime.getText().toString().trim();
                     String endTime = etEndTime.getText().toString().trim();
-                    String service = spinnerService.getSelectedItem().toString();
+                    String selectedService = spinnerService.getSelectedItem().toString();
                     String reason = etReason.getText().toString().trim();
 
                     if (date.isEmpty() || startTime.isEmpty() || endTime.isEmpty()) {
@@ -145,30 +179,127 @@ public class ClosedTimeSlotsActivity extends AppCompatActivity {
                         return;
                     }
 
-                    addClosedSlot(date, startTime, endTime, service, reason);
+                    if (reason.isEmpty()) {
+                        reason = "Closed for maintenance";
+                    }
+
+                    addClosedSlot(date, startTime, endTime, selectedService, reason);
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
     }
 
-    private void addClosedSlot(String date, String startTime, String endTime, String service, String reason) {
-        Map<String, Object> closedSlot = new HashMap<>();
-        closedSlot.put("date", date);
-        closedSlot.put("start_time", startTime);
-        closedSlot.put("end_time", endTime);
-        closedSlot.put("service_type", service);
-        closedSlot.put("reason", reason);
-        closedSlot.put("created_at", Timestamp.now());
+    private void addClosedSlot(String date, String startTime, String endTime, String selectedService, String reason) {
+        // Parse the selected service
+        String[] parts = selectedService.split(" - ");
+        String serviceName = parts[0];
+        String location = parts.length > 1 ? parts[1] : null;
 
-        db.collection("closed_slots")
-                .add(closedSlot)
-                .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(this, "Closed slot added successfully", Toast.LENGTH_SHORT).show();
-                    loadClosedSlots();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Error adding slot: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+        // Get service type for database
+        String serviceType = getServiceTypeFromName(serviceName);
+
+        // Get locations to close
+        List<String> locationsToClose = getLocationsToClose(serviceName, location);
+
+        int totalSlots = locationsToClose.size();
+        final int[] successCount = {0};
+        final int[] failCount = {0};
+
+        for (String loc : locationsToClose) {
+            Map<String, Object> closedBooking = new HashMap<>();
+            closedBooking.put("date", date);
+            closedBooking.put("start_time", startTime);
+            closedBooking.put("end_time", endTime);
+            closedBooking.put("service_type", serviceType);
+            closedBooking.put("service_name", serviceName);
+            closedBooking.put("location_id", loc);
+            closedBooking.put("status", "closed");
+            closedBooking.put("user_id", "SYSTEM");
+            closedBooking.put("user_name", "System Maintenance");
+            closedBooking.put("user_email", "system@smartqueue.com");
+            closedBooking.put("notes", reason);
+            closedBooking.put("created_at", Timestamp.now());
+            closedBooking.put("updated_at", Timestamp.now());
+            closedBooking.put("duration", 1);
+            closedBooking.put("amount", 0.0);
+            closedBooking.put("payment_status", "free");
+
+            Log.d(TAG, "Creating closed slot: " + closedBooking.toString());
+
+            db.collection("bookings")
+                    .add(closedBooking)
+                    .addOnSuccessListener(documentReference -> {
+                        successCount[0]++;
+                        Log.d(TAG, "Closed slot added: " + documentReference.getId() + " for " + loc);
+
+                        if (successCount[0] + failCount[0] == totalSlots) {
+                            showCompletionMessage(successCount[0], failCount[0]);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        failCount[0]++;
+                        Log.e(TAG, "Error adding closed slot for " + loc + ": " + e.getMessage());
+
+                        if (successCount[0] + failCount[0] == totalSlots) {
+                            showCompletionMessage(successCount[0], failCount[0]);
+                        }
+                    });
+        }
+    }
+
+    private void showCompletionMessage(int successCount, int failCount) {
+        if (failCount == 0) {
+            Toast.makeText(this, successCount + " closed slot(s) added successfully", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, successCount + " succeeded, " + failCount + " failed", Toast.LENGTH_LONG).show();
+        }
+        loadClosedSlots();
+    }
+
+    private String getServiceTypeFromName(String serviceName) {
+        switch (serviceName) {
+            case "Discussion Room":
+                return "discussion_room";
+            case "Pool Table":
+                return "pool_table";
+            case "Ping Pong":
+                return "ping_pong";
+            case "Music Room":
+                return "music_room";
+            default:
+                return serviceName.toLowerCase().replace(" ", "_");
+        }
+    }
+
+    private List<String> getLocationsToClose(String serviceName, String specificLocation) {
+        List<String> locations = new ArrayList<>();
+
+        if (specificLocation != null && !specificLocation.equals("All")) {
+            // Close only the specific location
+            locations.add(specificLocation);
+            return locations;
+        }
+
+        // Close all locations for this service
+        switch (serviceName) {
+            case "Discussion Room":
+                locations.addAll(Arrays.asList("Room L1", "Room L2", "Room S1", "Room S2", "Room S3"));
+                break;
+            case "Pool Table":
+                locations.addAll(Arrays.asList("Pool Table 1", "Pool Table 2"));
+                break;
+            case "Ping Pong":
+                locations.addAll(Arrays.asList("Table 1", "Table 2"));
+                break;
+            case "Music Room":
+                locations.add("Music Room");
+                break;
+            default:
+                locations.add(serviceName);
+                break;
+        }
+
+        return locations;
     }
 
     private void deleteClosedSlot(ClosedSlotModel slot) {
@@ -176,7 +307,7 @@ public class ClosedTimeSlotsActivity extends AppCompatActivity {
                 .setTitle("Delete Closed Slot")
                 .setMessage("Are you sure you want to remove this closed slot?")
                 .setPositiveButton("Delete", (dialog, which) -> {
-                    db.collection("closed_slots").document(slot.getId())
+                    db.collection("bookings").document(slot.getId())
                             .delete()
                             .addOnSuccessListener(aVoid -> {
                                 Toast.makeText(this, "Closed slot removed", Toast.LENGTH_SHORT).show();
