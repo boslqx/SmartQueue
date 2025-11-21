@@ -13,7 +13,7 @@ public class PaymentSuccessActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.payment_success_activity); // Make sure this matches your XML filename
+        setContentView(R.layout.payment_success_activity);
 
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.available_color));
 

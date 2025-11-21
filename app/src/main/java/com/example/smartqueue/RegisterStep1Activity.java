@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class RegisterStep1Activity extends AppCompatActivity {
 
-    // CONFIGURE YOUR ALLOWED EMAIL DOMAIN HERE
+    // CONFIGURE EMAIL DOMAIN HERE
     private static final String ALLOWED_EMAIL_DOMAIN = "@student.newiniti.edu.my";
 
     EditText etName, etEmail, etPassword, etConfirm;

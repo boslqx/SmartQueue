@@ -179,7 +179,7 @@ public class ConfirmBookingActivity extends AppCompatActivity {
 
         Log.d(TAG, "Creating booking with data: " + booking.toString());
 
-        // *** FIXED: Create final variables BEFORE the lambda ***
+        //  Create final variables before the lambda
         final String finalUserEmail = userEmail;
         final String finalUserName = userName;
         final String finalServiceName = serviceName;
@@ -196,7 +196,7 @@ public class ConfirmBookingActivity extends AppCompatActivity {
                 .addOnSuccessListener(documentReference -> {
                     Log.d(TAG, "Booking created with ID: " + documentReference.getId());
 
-                    // *** Send confirmation email ***
+                    // Send confirmation email
                     BookingModel bookingModel = new BookingModel();
                     bookingModel.setUserEmail(finalUserEmail);
                     bookingModel.setUserName(finalUserName);
@@ -212,7 +212,7 @@ public class ConfirmBookingActivity extends AppCompatActivity {
 
                     // Send email in background
                     EmailSender.sendBookingConfirmation(bookingModel, documentReference.getId());
-                    // *** END EMAIL CODE ***
+                    //  END EMAIL CODE
 
                     if ("lecturer_consultation".equals(serviceType) && lecturerId != null) {
                         updateLecturerBookedHours(lecturerId);
